@@ -23,3 +23,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Convex generated code — regenerated locally via `npx convex dev` (or `npx convex codegen`).
+# Not committed: avoids constant merge conflicts when multiple devs run codegen.
+# See docs/IMPLEMENTATION-PLAN.md §4 (0.1).
+convex/_generated/
