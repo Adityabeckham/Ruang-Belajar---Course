@@ -28,3 +28,6 @@ dist-ssr
 # Not committed: avoids constant merge conflicts when multiple devs run codegen.
 # See docs/IMPLEMENTATION-PLAN.md §4 (0.1).
 convex/_generated/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
