@@ -1,1 +1,6 @@
-@import "tailwindcss";
+/* Tailwind v4 — utilities only. Preflight (base reset) is intentionally omitted
+   so Tailwind's reset doesn't clobber Ant Design's component styling. antd owns
+   component look; Tailwind is kept only for layout/spacing utilities. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
