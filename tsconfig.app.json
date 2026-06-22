@@ -13,6 +13,9 @@
     "noEmit": true,
     "jsx": "react-jsx",
 
+    /* Path alias (paths resolve relative to this tsconfig; no baseUrl needed) */
+    "paths": { "@/*": ["./src/*"] },
+
     /* Linting */
     "strict": true,
     "noFallthroughCasesInSwitch": true
