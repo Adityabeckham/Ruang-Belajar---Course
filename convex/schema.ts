@@ -50,7 +50,8 @@ export default defineSchema({
     image: v.optional(v.string()),
     emailVerificationTime: v.optional(v.number()),
     isAnonymous: v.optional(v.boolean()),
-  }),
+    tokenIdentifier: v.string(), // Added for Firebase Auth mapping
+  }).index("by_tokenIdentifier", ["tokenIdentifier"]),
 
   // ┌──────────────────────────────────────────────────────────
   // │ PROFILES — Profil pengguna + role + rollup gamifikasi
