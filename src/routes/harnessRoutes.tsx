@@ -3,6 +3,7 @@ import ExercisesHarness from '@/pages/harness/ExercisesHarness';
 import DiscussionHarness from '@/pages/harness/DiscussionHarness';
 import GamificationHarness from '@/pages/harness/GamificationHarness';
 import MarkdownHarness from '@/pages/harness/MarkdownHarness';
+import ContentHarness from '@/pages/harness/ContentHarness';
 import Showcase from '@/Showcase';
 
 /**
@@ -10,6 +11,7 @@ import Showcase from '@/Showcase';
  * berdiri di luar shell utama & tanpa guard — tak menunggu LessonView Dev A.
  */
 export const harnessRoutes: RouteObject[] = [
+  { path: '_harness/content', element: <ContentHarness /> },
   { path: '_harness/exercises', element: <ExercisesHarness /> },
   { path: '_harness/discussion', element: <DiscussionHarness /> },
   { path: '_harness/gamification', element: <GamificationHarness /> },
