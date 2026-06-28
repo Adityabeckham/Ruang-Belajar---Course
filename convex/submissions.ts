@@ -87,6 +87,29 @@ export const submitText = mutation({
   },
 });
 
+// Submit kode (HTML/CSS/JS) → menunggu review admin (B4). Eksekusi/preview
+// hanya di client dalam <iframe sandbox> (PRD §10); server cuma menyimpan.
+export const submitCode = mutation({
+  args: {
+    exerciseId: v.id("exercises"),
+    code: v.object({ html: v.string(), css: v.string(), js: v.string() }),
+  },
+  handler: async (ctx, { exerciseId, code }) => {
+    const user = await requireUser(ctx);
+    const ex = await ctx.db.get(exerciseId);
+    if (!ex || ex.type !== "code") throw new Error("Latihan bukan tipe code");
+
+    return await ctx.db.insert("submissions", {
+      userId: user._id,
+      exerciseId,
+      type: "code",
+      code,
+      status: "pending",
+      submittedAt: Date.now(),
+    });
+  },
+});
+
 // Submission terbaru milik user login untuk sebuah exercise (status di panel).
 export const mySubmission = query({
   args: { exerciseId: v.id("exercises") },

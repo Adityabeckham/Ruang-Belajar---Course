@@ -17,6 +17,7 @@ import {
   message,
 } from '@/components/ui';
 import Markdown from '@/components/Markdown';
+import CodeEditor from './CodeEditor';
 
 const { Text } = Typography;
 
@@ -209,11 +210,7 @@ function ExerciseCard({ ex, isAuthenticated }: { ex: Exercise; isAuthenticated: 
       {ex.type === 'link' && <LinkBody ex={ex} disabled={disabled} />}
       {ex.type === 'text' && <TextBody ex={ex} disabled={disabled} />}
       {ex.type === 'code' && (
-        <EmptyState
-          icon="💻"
-          title="Code editor in-browser"
-          description="Editor + preview iframe dikerjakan di Fase 5 (B5)."
-        />
+        <CodeEditor exerciseId={ex._id} starter={ex.starter} disabled={disabled} />
       )}
       {sub?.feedbackMd && (
         <Alert style={{ marginTop: 12 }} type="info" showIcon title="Feedback reviewer" description={<Markdown source={sub.feedbackMd} />} />
