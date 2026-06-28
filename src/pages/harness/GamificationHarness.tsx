@@ -1,19 +1,22 @@
 import HarnessShell from './HarnessShell';
-import { Section, Space, XPBar, AchievementBadge } from '@/components/ui';
+import { Section, Typography } from '@/components/ui';
+import MyXPBar from '@/features/gamification/MyXPBar';
+import BadgeShelf from '@/features/gamification/BadgeShelf';
 
-/** /_harness/gamification — uji komponen XP/level/badge mandiri (Dev C). */
+const { Text } = Typography;
+
+/** /_harness/gamification — XPBar + BadgeShelf data nyata (Task C3). */
 export default function GamificationHarness() {
   return (
     <HarnessShell title="gamification">
       <Section title="XP & Level">
-        <XPBar value={120} max={300} level={2} />
+        <Text type="secondary">Tampil saat login (data getMyGamification).</Text>
+        <div style={{ marginTop: 8 }}>
+          <MyXPBar />
+        </div>
       </Section>
       <Section title="Badges">
-        <Space wrap>
-          <AchievementBadge icon="🥇" title="Lesson Pertama" unlocked />
-          <AchievementBadge icon="🔥" title="5 Lesson Sehari" unlocked={false} />
-          <AchievementBadge icon="🏆" title="Modul HTML" unlocked={false} />
-        </Space>
+        <BadgeShelf />
       </Section>
     </HarnessShell>
   );

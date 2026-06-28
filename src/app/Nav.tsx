@@ -14,10 +14,16 @@ const links = [
 
 function ProfileChip() {
   const profile = useQuery(api.profiles.getCurrentProfile);
+  const gami = useQuery(api.gamification.getMyGamification);
   const isAdmin = profile?.role === 'admin';
 
   return (
     <Space size="middle">
+      {gami && (
+        <Tag color="gold" style={{ margin: 0 }}>
+          Lv {gami.level} · {gami.totalXp} XP
+        </Tag>
+      )}
       {isAdmin && (
         <Link to="/admin">
           <Tag color="purple" style={{ cursor: 'pointer', margin: 0 }}>
