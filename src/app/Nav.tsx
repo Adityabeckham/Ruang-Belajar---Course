@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { useAuthActions } from '@convex-dev/auth/react';
+import { signOut } from 'firebase/auth';
 import { Authenticated, Unauthenticated, AuthLoading, useQuery } from 'convex/react';
+import { auth } from '@/lib/firebase';
 import { api } from '../../convex/_generated/api';
 import { Flex, Button, Space, Typography, Avatar, Tag, Spin } from '@/components/ui';
 
@@ -13,7 +14,6 @@ const links = [
 
 function ProfileChip() {
   const profile = useQuery(api.profiles.getCurrentProfile);
-  const { signOut } = useAuthActions();
   const isAdmin = profile?.role === 'admin';
 
   return (
@@ -33,7 +33,7 @@ function ProfileChip() {
           <Text>{profile?.displayName ?? 'Profil'}</Text>
         </Space>
       </Link>
-      <Button size="small" onClick={() => void signOut()}>
+      <Button size="small" onClick={() => void signOut(auth)}>
         Keluar
       </Button>
     </Space>

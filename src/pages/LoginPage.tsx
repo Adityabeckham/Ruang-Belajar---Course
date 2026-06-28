@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuthActions } from '@convex-dev/auth/react';
+import { signInWithPopup } from 'firebase/auth';
 import { useConvexAuth } from 'convex/react';
+import { auth, googleProvider, githubProvider } from '@/lib/firebase';
 import {
   PageContainer,
   Section,
@@ -16,9 +17,8 @@ const { Title, Text } = Typography;
 
 type LocationState = { from?: { pathname?: string } } | null;
 
-/** Halaman login: Google / GitHub OAuth (PRD §9 route `/login`). */
+/** Halaman login: Google / GitHub via Firebase Auth (PRD §9 route `/login`). */
 export default function LoginPage() {
-  const { signIn } = useAuthActions();
   const { isLoading, isAuthenticated } = useConvexAuth();
   const location = useLocation();
   const [busy, setBusy] = useState<'google' | 'github' | null>(null);
@@ -26,6 +26,7 @@ export default function LoginPage() {
   if (isLoading) return <Loading tip="Memeriksa sesi…" />;
 
   // Sudah login → balik ke halaman asal atau dashboard.
+  // Sinkronisasi user+profile ditangani oleh <AuthSync> di Layout.
   if (isAuthenticated) {
     const from = (location.state as LocationState)?.from?.pathname ?? '/dashboard';
     return <Navigate to={from} replace />;
@@ -34,7 +35,11 @@ export default function LoginPage() {
   const handle = async (provider: 'google' | 'github') => {
     setBusy(provider);
     try {
-      await signIn(provider);
+      await signInWithPopup(
+        auth,
+        provider === 'google' ? googleProvider : githubProvider,
+      );
+      // Redirect terjadi otomatis saat isAuthenticated berubah (lihat di atas).
     } catch {
       message.error('Gagal masuk. Coba lagi.');
       setBusy(null);

@@ -30,6 +30,7 @@ export const run = internalMutation({
     const adminUser = await ctx.db.insert("users", {
       name: "Admin Seed",
       email: "admin@ruangbelajar.test",
+      tokenIdentifier: "seed|admin", // wajib (mapping Firebase) — data uji
     });
     await ctx.db.insert("profiles", {
       userId: adminUser,
@@ -42,6 +43,7 @@ export const run = internalMutation({
     const studentUser = await ctx.db.insert("users", {
       name: "Siswa Seed",
       email: "siswa@ruangbelajar.test",
+      tokenIdentifier: "seed|student", // wajib (mapping Firebase) — data uji
     });
     await ctx.db.insert("profiles", {
       userId: studentUser,

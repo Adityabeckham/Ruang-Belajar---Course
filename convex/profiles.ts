@@ -1,47 +1,28 @@
-import { query } from "./_generated/server";
-import { getAuthUserId } from "@convex-dev/auth/server";
-import type { Id } from "./_generated/dataModel";
-import type { MutationCtx } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+import type { QueryCtx, MutationCtx } from "./_generated/server";
 
-// Helper dipakai oleh auth callback: bikin profile saat login pertama.
-// Idempoten — aman dipanggil tiap login (afterUserCreatedOrUpdated).
-// Role default "student" (PRD §3); admin pertama dipromosikan manual / lewat seed.
-export async function ensureProfileForUser(
-  ctx: MutationCtx,
-  userId: Id<"users">,
-) {
-  const existing = await ctx.db
-    .query("profiles")
-    .withIndex("by_user", (q) => q.eq("userId", userId))
+// Resolve user Convex dari identitas Firebase (JWT → tokenIdentifier).
+// Selaras dengan pola convex/users.ts (milik auth Firebase di main).
+async function userFromIdentity(ctx: QueryCtx | MutationCtx) {
+  const identity = await ctx.auth.getUserIdentity();
+  if (!identity) return null;
+  return await ctx.db
+    .query("users")
+    .withIndex("by_tokenIdentifier", (q) =>
+      q.eq("tokenIdentifier", identity.tokenIdentifier),
+    )
     .unique();
-  if (existing) return existing._id;
-
-  const user = await ctx.db.get(userId);
-  const displayName =
-    (user?.name as string | undefined) ??
-    (user?.email as string | undefined) ??
-    "Pengguna Baru";
-  const avatarUrl = user?.image as string | undefined;
-
-  return await ctx.db.insert("profiles", {
-    userId,
-    role: "student",
-    displayName,
-    avatarUrl,
-    totalXp: 0,
-    level: 1,
-  });
 }
 
 // Profil user yang sedang login (null bila belum login / belum ada profil).
 export const getCurrentProfile = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return null;
+    const user = await userFromIdentity(ctx);
+    if (!user) return null;
     return await ctx.db
       .query("profiles")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
       .unique();
   },
 });
@@ -50,12 +31,38 @@ export const getCurrentProfile = query({
 export const isCurrentUserAdmin = query({
   args: {},
   handler: async (ctx) => {
-    const userId = await getAuthUserId(ctx);
-    if (!userId) return false;
+    const user = await userFromIdentity(ctx);
+    if (!user) return false;
     const profile = await ctx.db
       .query("profiles")
-      .withIndex("by_user", (q) => q.eq("userId", userId))
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
       .unique();
     return profile?.role === "admin";
+  },
+});
+
+// Bikin profile saat login pertama (role default "student") — idempoten (Task 0.4).
+// Dipanggil dari frontend setelah `users.storeUser` (lihat AuthSync).
+// Prasyarat: row `users` sudah ada (dibuat oleh storeUser).
+export const ensureProfile = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await userFromIdentity(ctx);
+    if (!user) return null;
+
+    const existing = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .unique();
+    if (existing) return existing._id;
+
+    return await ctx.db.insert("profiles", {
+      userId: user._id,
+      role: "student",
+      displayName: user.name ?? user.email ?? "Pengguna Baru",
+      avatarUrl: user.image,
+      totalXp: 0,
+      level: 1,
+    });
   },
 });
