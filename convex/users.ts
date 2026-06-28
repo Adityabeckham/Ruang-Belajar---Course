@@ -53,7 +53,7 @@ export const storeUser = mutation({
       ) {
         await ctx.db.patch(user._id, {
           name: identity.name,
-          image: identity.picture,
+          image: typeof identity.picture === "string" ? identity.picture : undefined,
           email: identity.email,
         });
       }
@@ -64,7 +64,7 @@ export const storeUser = mutation({
     return await ctx.db.insert("users", {
       name: identity.name,
       email: identity.email,
-      image: identity.picture,
+      image: typeof identity.picture === "string" ? identity.picture : undefined,
       tokenIdentifier: identity.tokenIdentifier,
     });
   },
