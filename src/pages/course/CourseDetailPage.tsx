@@ -10,6 +10,7 @@ import {
   Space,
   Flex,
   Typography,
+  Progress,
   Loading,
   EmptyState,
   message,
@@ -28,6 +29,10 @@ export default function CourseDetailPage() {
     api.enrollments.isEnrolled,
     course ? { courseId: course._id } : 'skip',
   );
+  const progress = useQuery(
+    api.progress.getCourseProgress,
+    course ? { courseId: course._id } : 'skip',
+  );
   const enroll = useMutation(api.enrollments.enroll);
 
   if (course === undefined) return <Loading tip="Memuat course…" />;
@@ -39,6 +44,7 @@ export default function CourseDetailPage() {
     );
   }
 
+  const completedSet = new Set(progress?.completedLessonIds ?? []);
   const firstLesson = course.modules.flatMap((m) => m.lessons)[0];
   const lessonPath = firstLesson
     ? `/learn/${course.slug}/${firstLesson.slug}`
@@ -87,6 +93,17 @@ export default function CourseDetailPage() {
         {!course.published && <Tag color="default">draft</Tag>}
       </Space>
 
+      {enrolled && progress && progress.total > 0 && (
+        <Section title="Progres kamu">
+          <Flex align="center" gap={12}>
+            <Progress percent={progress.percent} style={{ flex: 1 }} />
+            <Text type="secondary">
+              {progress.completed}/{progress.total} lesson
+            </Text>
+          </Flex>
+        </Section>
+      )}
+
       {course.modules.length === 0 ? (
         <EmptyState icon="📭" title="Outline belum tersedia" />
       ) : (
@@ -97,10 +114,11 @@ export default function CourseDetailPage() {
             ) : (
               <Flex vertical gap={8}>
                 {m.lessons.map((l, j) => {
+                  const done = completedSet.has(l._id);
                   const row = (
                     <Flex justify="space-between" align="center">
                       <Text>
-                        {j + 1}. {l.title}
+                        {done ? '✓' : `${j + 1}.`} {l.title}
                       </Text>
                       <Text type="secondary" style={{ fontSize: 12 }}>
                         +{l.xpReward} XP
