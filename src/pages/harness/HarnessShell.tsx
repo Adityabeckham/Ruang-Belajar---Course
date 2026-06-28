@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { PageContainer, PageHeader, Tag, Space } from '@/components/ui';
 
 const harnesses = [
+  { to: '/_harness/content', label: 'content' },
   { to: '/_harness/exercises', label: 'exercises' },
   { to: '/_harness/discussion', label: 'discussion' },
   { to: '/_harness/gamification', label: 'gamification' },

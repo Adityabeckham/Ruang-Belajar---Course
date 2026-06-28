@@ -59,7 +59,7 @@ export default function Showcase() {
             <Tag>HTML</Tag>
             <Tag color="green">CSS</Tag>
           </Toolbar>
-          <Alert message="Perubahan tersimpan otomatis" type="success" showIcon />
+          <Alert title="Perubahan tersimpan otomatis" type="success" showIcon />
           <Progress percent={70} />
         </Flex>
       </Section>

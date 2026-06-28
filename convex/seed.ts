@@ -1,5 +1,33 @@
 import { internalMutation } from "./_generated/server";
+import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
+
+/**
+ * Bootstrap admin: promosikan user (by email) jadi admin.
+ * Dipakai sekali setelah login pertama lewat UI (user baru = role student).
+ *   npx convex run seed:promoteToAdmin '{"email":"kamu@contoh.com"}'
+ * Internal → bisa dijalankan via `convex run` tanpa identitas login.
+ * (UI kelola role penuh = Task C5.)
+ */
+export const promoteToAdmin = internalMutation({
+  args: { email: v.string() },
+  handler: async (ctx, { email }) => {
+    const user = await ctx.db
+      .query("users")
+      .filter((q) => q.eq(q.field("email"), email))
+      .first();
+    if (!user) throw new Error(`User dgn email ${email} tidak ditemukan (login dulu)`);
+
+    const profile = await ctx.db
+      .query("profiles")
+      .withIndex("by_user", (q) => q.eq("userId", user._id))
+      .unique();
+    if (!profile) throw new Error("Profile belum ada (login dulu untuk membuatnya)");
+
+    await ctx.db.patch(profile._id, { role: "admin" });
+    return { ok: true, userId: user._id, email };
+  },
+});
 
 /**
  * Seed lintas-stream (Task 0.9). Jalankan dengan:
