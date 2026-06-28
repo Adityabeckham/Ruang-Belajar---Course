@@ -3,10 +3,12 @@ import ProtectedRoute from '@/app/ProtectedRoute';
 import LandingPage from '@/pages/LandingPage';
 import LoginPage from '@/pages/LoginPage';
 import PlaceholderPage from '@/pages/PlaceholderPage';
+import DashboardPage from '@/pages/dashboard/DashboardPage';
+import ProfilePage from '@/pages/profile/ProfilePage';
+import AdminUsersPage from '@/pages/admin/users/AdminUsersPage';
 
 /**
  * Route milik Dev C (Platform & Engagement): publik, dashboard, profil, admin user.
- * Fase 0: isi pakai placeholder kecuali landing & login.
  */
 export const platformRoutes: RouteObject[] = [
   { index: true, element: <LandingPage /> },
@@ -15,7 +17,7 @@ export const platformRoutes: RouteObject[] = [
     path: 'dashboard',
     element: (
       <ProtectedRoute>
-        <PlaceholderPage title="Dashboard" subtitle="Lanjut belajar · XP · badge" owner="Dev C" icon="📊" />
+        <DashboardPage />
       </ProtectedRoute>
     ),
   },
@@ -23,7 +25,7 @@ export const platformRoutes: RouteObject[] = [
     path: 'profile',
     element: (
       <ProtectedRoute>
-        <PlaceholderPage title="Profil" subtitle="Statistik & pencapaian" owner="Dev C" icon="👤" />
+        <ProfilePage />
       </ProtectedRoute>
     ),
   },
@@ -39,7 +41,7 @@ export const platformRoutes: RouteObject[] = [
     path: 'admin/users',
     element: (
       <ProtectedRoute requireAdmin>
-        <PlaceholderPage title="Kelola User & Role" owner="Dev C" icon="👥" />
+        <AdminUsersPage />
       </ProtectedRoute>
     ),
   },
