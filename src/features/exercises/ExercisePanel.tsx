@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useQuery } from 'convex/react';
+import { useQuery, useMutation, useConvexAuth } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import type { Id } from '../../../convex/_generated/dataModel';
 import {
@@ -12,28 +12,17 @@ import {
   Space,
   Flex,
   Tag,
-  Tooltip,
+  Alert,
   Typography,
+  message,
 } from '@/components/ui';
 import Markdown from '@/components/Markdown';
 
 const { Text } = Typography;
 
 export interface ExercisePanelProps {
-  /** Seam 2: panel selalu menerima lessonId; aman saat tak ada latihan. */
   lessonId: string;
   courseId?: string;
-}
-
-// Tombol kirim dinonaktifkan di B2 — pengumpulan + auto-grade dikerjakan di B3.
-function SubmitStub() {
-  return (
-    <Tooltip title="Pengumpulan & auto-grade dikerjakan di B3">
-      <Button type="primary" disabled>
-        Kirim
-      </Button>
-    </Tooltip>
-  );
 }
 
 type Question = { id: string; questionMd: string; options: string[] };
@@ -47,8 +36,41 @@ type Exercise = {
   starter?: { html: string; css: string; js: string };
 };
 
-function QuizBody({ quiz }: { quiz: { questions: Question[]; passScore: number } }) {
+const STATUS_COLOR: Record<string, string> = {
+  passed: 'green',
+  failed: 'red',
+  pending: 'gold',
+  reviewed: 'blue',
+};
+
+function QuizBody({
+  ex,
+  disabled,
+}: {
+  ex: Exercise;
+  disabled: boolean;
+}) {
+  const quiz = ex.quiz!;
   const [answers, setAnswers] = useState<Record<string, number>>({});
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<{ score: number; passed: boolean } | null>(null);
+  const submit = useMutation(api.submissions.submitQuiz);
+
+  const onSubmit = async () => {
+    const ordered = quiz.questions.map((q) => answers[q.id] ?? -1);
+    if (ordered.some((a) => a < 0)) return message.warning('Jawab semua soal dulu');
+    setBusy(true);
+    try {
+      const res = await submit({ exerciseId: ex._id as Id<'exercises'>, answers: ordered });
+      setResult({ score: res.score, passed: res.passed });
+      message.success(res.passed ? `Lulus! Skor ${res.score}%` : `Skor ${res.score}% — coba lagi`);
+    } catch (e) {
+      message.error(e instanceof Error ? e.message : 'Gagal mengirim');
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <Flex vertical gap={16}>
       <Text type="secondary">Nilai lulus: {quiz.passScore}%</Text>
@@ -72,13 +94,24 @@ function QuizBody({ quiz }: { quiz: { questions: Question[]; passScore: number }
           </Radio.Group>
         </div>
       ))}
-      <SubmitStub />
+      {result && (
+        <Alert
+          type={result.passed ? 'success' : 'error'}
+          showIcon
+          title={`Skor: ${result.score}% — ${result.passed ? 'Lulus 🎉' : 'Belum lulus'}`}
+        />
+      )}
+      <Button type="primary" loading={busy} disabled={disabled} onClick={onSubmit} style={{ alignSelf: 'flex-start' }}>
+        Kirim jawaban
+      </Button>
     </Flex>
   );
 }
 
-function LinkBody() {
+function LinkBody({ ex, disabled }: { ex: Exercise; disabled: boolean }) {
   const [url, setUrl] = useState('');
+  const [busy, setBusy] = useState(false);
+  const submit = useMutation(api.submissions.submitLink);
   return (
     <Flex vertical gap={12}>
       <Input
@@ -86,13 +119,34 @@ function LinkBody() {
         value={url}
         onChange={(e) => setUrl(e.target.value)}
       />
-      <SubmitStub />
+      <Button
+        type="primary"
+        loading={busy}
+        disabled={disabled}
+        style={{ alignSelf: 'flex-start' }}
+        onClick={async () => {
+          setBusy(true);
+          try {
+            await submit({ exerciseId: ex._id as Id<'exercises'>, url });
+            message.success('Terkirim — menunggu review admin');
+            setUrl('');
+          } catch (e) {
+            message.error(e instanceof Error ? e.message : 'Gagal');
+          } finally {
+            setBusy(false);
+          }
+        }}
+      >
+        Kirim link
+      </Button>
     </Flex>
   );
 }
 
-function TextBody() {
+function TextBody({ ex, disabled }: { ex: Exercise; disabled: boolean }) {
   const [text, setText] = useState('');
+  const [busy, setBusy] = useState(false);
+  const submit = useMutation(api.submissions.submitText);
   return (
     <Flex vertical gap={12}>
       <Input.TextArea
@@ -101,12 +155,36 @@ function TextBody() {
         onChange={(e) => setText(e.target.value)}
         rows={5}
       />
-      <SubmitStub />
+      <Button
+        type="primary"
+        loading={busy}
+        disabled={disabled}
+        style={{ alignSelf: 'flex-start' }}
+        onClick={async () => {
+          setBusy(true);
+          try {
+            await submit({ exerciseId: ex._id as Id<'exercises'>, text });
+            message.success('Terkirim — menunggu review admin');
+            setText('');
+          } catch (e) {
+            message.error(e instanceof Error ? e.message : 'Gagal');
+          } finally {
+            setBusy(false);
+          }
+        }}
+      >
+        Kirim jawaban
+      </Button>
     </Flex>
   );
 }
 
-function ExerciseCard({ ex }: { ex: Exercise }) {
+function ExerciseCard({ ex, isAuthenticated }: { ex: Exercise; isAuthenticated: boolean }) {
+  const sub = useQuery(api.submissions.mySubmission, {
+    exerciseId: ex._id as Id<'exercises'>,
+  });
+  const disabled = !isAuthenticated;
+
   return (
     <Section
       title={
@@ -114,13 +192,22 @@ function ExerciseCard({ ex }: { ex: Exercise }) {
           {ex.title}
           <Tag color="geekblue">{ex.type}</Tag>
           <Tag color="green">+{ex.xpReward} XP</Tag>
+          {sub && (
+            <Tag color={STATUS_COLOR[sub.status]}>
+              {sub.status}
+              {sub.score != null ? ` · ${sub.score}%` : ''}
+            </Tag>
+          )}
         </Space>
       }
     >
       {ex.promptMd.trim() && <Markdown source={ex.promptMd} />}
-      {ex.type === 'quiz' && ex.quiz && <QuizBody quiz={ex.quiz} />}
-      {ex.type === 'link' && <LinkBody />}
-      {ex.type === 'text' && <TextBody />}
+      {!isAuthenticated && (
+        <Text type="secondary">Masuk untuk mengumpulkan jawaban.</Text>
+      )}
+      {ex.type === 'quiz' && ex.quiz && <QuizBody ex={ex} disabled={disabled} />}
+      {ex.type === 'link' && <LinkBody ex={ex} disabled={disabled} />}
+      {ex.type === 'text' && <TextBody ex={ex} disabled={disabled} />}
       {ex.type === 'code' && (
         <EmptyState
           icon="💻"
@@ -128,15 +215,19 @@ function ExerciseCard({ ex }: { ex: Exercise }) {
           description="Editor + preview iframe dikerjakan di Fase 5 (B5)."
         />
       )}
+      {sub?.feedbackMd && (
+        <Alert style={{ marginTop: 12 }} type="info" showIcon title="Feedback reviewer" description={<Markdown source={sub.feedbackMd} />} />
+      )}
     </Section>
   );
 }
 
 /**
- * `<ExercisePanel lessonId>` — render UI latihan per tipe (Task B2, Seam 2).
- * Render quiz/link/teks/code; pengumpulan (submission) = B3.
+ * `<ExercisePanel lessonId>` — render UI + pengumpulan latihan per tipe
+ * (Task B2 render, B3 submission). Auto-grade kuis di server.
  */
 export default function ExercisePanel({ lessonId }: ExercisePanelProps) {
+  const { isAuthenticated } = useConvexAuth();
   const exercises = useQuery(api.exercises.listByLesson, {
     lessonId: lessonId as Id<'lessons'>,
   }) as Exercise[] | undefined;
@@ -153,7 +244,7 @@ export default function ExercisePanel({ lessonId }: ExercisePanelProps) {
   return (
     <>
       {exercises.map((ex) => (
-        <ExerciseCard key={ex._id} ex={ex} />
+        <ExerciseCard key={ex._id} ex={ex} isAuthenticated={isAuthenticated} />
       ))}
     </>
   );
