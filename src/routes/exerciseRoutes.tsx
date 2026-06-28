@@ -1,6 +1,6 @@
 import type { RouteObject } from 'react-router-dom';
 import ProtectedRoute from '@/app/ProtectedRoute';
-import PlaceholderPage from '@/pages/PlaceholderPage';
+import AdminSubmissionsPage from '@/pages/admin/submissions/AdminSubmissionsPage';
 
 /**
  * Route milik Dev B (Exercises & Review): review queue admin.
@@ -11,7 +11,7 @@ export const exerciseRoutes: RouteObject[] = [
     path: 'admin/submissions',
     element: (
       <ProtectedRoute requireAdmin>
-        <PlaceholderPage title="Review Queue" subtitle="Submission pending → reviewed" owner="Dev B" icon="📥" />
+        <AdminSubmissionsPage />
       </ProtectedRoute>
     ),
   },
