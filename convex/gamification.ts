@@ -70,6 +70,88 @@ export async function awardXp(
   if (profile) {
     await ctx.db.patch(profile._id, { totalXp, level });
   }
+
+  // Seam: cek & award badge sesudah XP berubah (Task C2).
+  await checkAndAwardBadges(ctx, userId);
+}
+
+// ── Badge engine (Task C2) ────────────────────────────────────────────
+// Kriteria per-key (logic di code, deskripsi human-readable di tabel badges).
+async function criteriaMet(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+  key: string,
+): Promise<boolean> {
+  switch (key) {
+    case "first_lesson": {
+      const p = await ctx.db
+        .query("lessonProgress")
+        .withIndex("by_user_lesson", (q) => q.eq("userId", userId))
+        .first();
+      return p !== null;
+    }
+    case "first_submission": {
+      const s = await ctx.db
+        .query("submissions")
+        .withIndex("by_user", (q) => q.eq("userId", userId))
+        .first();
+      return s !== null;
+    }
+    case "html_master": {
+      const courses = (await ctx.db.query("courses").collect()).filter(
+        (c) => c.published && c.tags.includes("html"),
+      );
+      for (const course of courses) {
+        const lessons = await ctx.db
+          .query("lessons")
+          .withIndex("by_course", (q) => q.eq("courseId", course._id))
+          .collect();
+        if (lessons.length === 0) continue;
+        const progress = await ctx.db
+          .query("lessonProgress")
+          .withIndex("by_user_course", (q) =>
+            q.eq("userId", userId).eq("courseId", course._id),
+          )
+          .collect();
+        const done = new Set(progress.map((p) => p.lessonId));
+        if (lessons.every((l) => done.has(l._id))) return true;
+      }
+      return false;
+    }
+    default:
+      return false;
+  }
+}
+
+/**
+ * Cek semua badge untuk user; award yang kriterianya terpenuhi & belum dimiliki.
+ * Dipanggil sesudah awardXp; bisa juga dipanggil mutation lain (mis. submission).
+ * Mengembalikan key badge yang baru di-award.
+ */
+export async function checkAndAwardBadges(
+  ctx: MutationCtx,
+  userId: Id<"users">,
+): Promise<string[]> {
+  const badges = await ctx.db.query("badges").collect();
+  const awarded: string[] = [];
+  for (const badge of badges) {
+    const existing = await ctx.db
+      .query("userBadges")
+      .withIndex("by_user_badge", (q) =>
+        q.eq("userId", userId).eq("badgeId", badge._id),
+      )
+      .unique();
+    if (existing) continue;
+    if (await criteriaMet(ctx, userId, badge.key)) {
+      await ctx.db.insert("userBadges", {
+        userId,
+        badgeId: badge._id,
+        awardedAt: Date.now(),
+      });
+      awarded.push(badge.key);
+    }
+  }
+  return awarded;
 }
 
 // ── Query untuk UI (XPBar dll) ────────────────────────────────────────
@@ -93,5 +175,32 @@ export const getMyGamification = query({
       xpIntoLevel: totalXp - base, // value untuk XPBar
       xpForNextLevel: next - base, // max untuk XPBar
     };
+  },
+});
+
+// Semua badge + status earned untuk user login (BadgeShelf, Task C3).
+export const getMyBadges = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    const badges = await ctx.db.query("badges").collect();
+
+    const earned = new Map<string, number>();
+    if (user) {
+      const ubs = await ctx.db
+        .query("userBadges")
+        .withIndex("by_user", (q) => q.eq("userId", user._id))
+        .collect();
+      for (const ub of ubs) earned.set(ub.badgeId, ub.awardedAt);
+    }
+
+    return badges.map((b) => ({
+      key: b.key,
+      title: b.title,
+      description: b.description,
+      icon: b.icon,
+      earned: earned.has(b._id),
+      awardedAt: earned.get(b._id) ?? null,
+    }));
   },
 });
