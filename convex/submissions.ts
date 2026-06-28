@@ -1,6 +1,6 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import { requireUser, getCurrentUser } from "./lib/authz";
+import { requireUser, getCurrentUser, requireAdmin } from "./lib/authz";
 import { awardXp } from "./gamification";
 
 // Submission kuis → auto-grade SERVER-SIDE (PRD §7.1). Bandingkan jawaban dgn
@@ -108,5 +108,82 @@ export const mySubmission = query({
       feedbackMd: latest.feedbackMd ?? null,
       submittedAt: latest.submittedAt,
     };
+  },
+});
+
+// ── Review queue admin (Task B4) ──────────────────────────────────────
+
+// Submission yang menunggu review (link/teks pending), di-enrich exercise + user.
+export const listPending = query({
+  args: {},
+  handler: async (ctx) => {
+    await requireAdmin(ctx);
+    const pending = await ctx.db
+      .query("submissions")
+      .withIndex("by_status", (q) => q.eq("status", "pending"))
+      .collect();
+    pending.sort((a, b) => a.submittedAt - b.submittedAt);
+
+    return await Promise.all(
+      pending.map(async (s) => {
+        const ex = await ctx.db.get(s.exerciseId);
+        const user = await ctx.db.get(s.userId);
+        const profile = user
+          ? await ctx.db
+              .query("profiles")
+              .withIndex("by_user", (q) => q.eq("userId", user._id))
+              .unique()
+          : null;
+        return {
+          _id: s._id,
+          type: s.type,
+          link: s.link ?? null,
+          text: s.text ?? null,
+          submittedAt: s.submittedAt,
+          exerciseTitle: ex?.title ?? "(latihan terhapus)",
+          exerciseXp: ex?.xpReward ?? 0,
+          studentName: profile?.displayName ?? user?.name ?? "Pengguna",
+        };
+      }),
+    );
+  },
+});
+
+// Review submission: set status + skor + feedback. XP saat di-pass (idempoten).
+export const review = mutation({
+  args: {
+    submissionId: v.id("submissions"),
+    status: v.union(
+      v.literal("passed"),
+      v.literal("failed"),
+      v.literal("reviewed"),
+    ),
+    score: v.optional(v.number()),
+    feedbackMd: v.optional(v.string()),
+  },
+  handler: async (ctx, { submissionId, status, score, feedbackMd }) => {
+    const admin = await requireAdmin(ctx);
+    const sub = await ctx.db.get(submissionId);
+    if (!sub) throw new Error("Submission tidak ditemukan");
+
+    await ctx.db.patch(submissionId, {
+      status,
+      score,
+      feedbackMd,
+      reviewedBy: admin._id,
+      reviewedAt: Date.now(),
+    });
+
+    if (status === "passed") {
+      const ex = await ctx.db.get(sub.exerciseId);
+      await awardXp(ctx, {
+        userId: sub.userId,
+        amount: ex?.xpReward ?? 0,
+        reason: "submission_passed",
+        refId: `submission_passed:${submissionId}`,
+      });
+    }
+
+    return { ok: true };
   },
 });
