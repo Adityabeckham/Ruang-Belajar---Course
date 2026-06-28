@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
 import HarnessShell from './HarnessShell';
+import LessonEditor from '@/features/content/LessonEditor';
 import {
   Section,
   Toolbar,
@@ -47,6 +48,7 @@ function ModuleRow({ module }: { module: { _id: string; title: string } }) {
   const removeModule = useMutation(api.modules.remove);
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
+  const [editorOpen, setEditorOpen] = useState(false);
 
   return (
     <div style={{ borderLeft: '2px solid rgba(0,0,0,0.08)', paddingLeft: 12, marginBottom: 12 }}>
@@ -71,7 +73,13 @@ function ModuleRow({ module }: { module: { _id: string; title: string } }) {
         >
           + Lesson
         </Button>
+        <Button size="small" onClick={() => setEditorOpen((o) => !o)}>
+          {editorOpen ? 'Tutup editor' : '✍️ Editor Markdown'}
+        </Button>
       </Toolbar>
+      {editorOpen && (
+        <LessonEditor moduleId={module._id} onSaved={() => setEditorOpen(false)} />
+      )}
     </div>
   );
 }

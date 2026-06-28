@@ -3,6 +3,7 @@ import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 import type { MutationCtx } from "./_generated/server";
 import { requireAdmin, isAdmin } from "./lib/authz";
+import { parseLessonMarkdown, slugify } from "./lib/lessonMarkdown";
 
 const DEFAULT_LESSON_XP = 20; // PRD §8
 
@@ -94,6 +95,56 @@ export const create = mutation({
       contentMd: args.contentMd ?? "",
       order: args.order ?? siblings.length,
       xpReward: args.xpReward ?? DEFAULT_LESSON_XP,
+    });
+  },
+});
+
+// Authoring: bikin lesson dari Markdown mentah (frontmatter + body) — Task A2.
+// title/slug/xpReward dari frontmatter (slug fallback = slugify(title)).
+export const createFromMarkdown = mutation({
+  args: {
+    moduleId: v.id("modules"),
+    raw: v.string(),
+    // Override opsional bila frontmatter tak lengkap (dari form editor).
+    title: v.optional(v.string()),
+    slug: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    await requireAdmin(ctx);
+
+    const module = await ctx.db.get(args.moduleId);
+    if (!module) throw new Error("Module tidak ditemukan");
+    const courseId = module.courseId;
+
+    const { data, contentMd } = parseLessonMarkdown(args.raw);
+    const title = args.title ?? data.title;
+    if (!title) throw new Error("Judul wajib (lewat frontmatter `title:` atau form)");
+    const slug =
+      args.slug ?? (typeof data.slug === "string" ? data.slug : slugify(title));
+    if (!slug) throw new Error("Slug tidak valid");
+
+    const inCourse = await ctx.db
+      .query("lessons")
+      .withIndex("by_course", (q) => q.eq("courseId", courseId))
+      .collect();
+    if (inCourse.some((l) => l.slug === slug)) {
+      throw new Error(`Slug "${slug}" sudah dipakai di course ini`);
+    }
+
+    const siblings = await ctx.db
+      .query("lessons")
+      .withIndex("by_module", (q) => q.eq("moduleId", args.moduleId))
+      .collect();
+
+    return await ctx.db.insert("lessons", {
+      moduleId: args.moduleId,
+      courseId,
+      title,
+      slug,
+      contentMd,
+      order: siblings.length,
+      xpReward:
+        typeof data.xpReward === "number" ? data.xpReward : DEFAULT_LESSON_XP,
     });
   },
 });
