@@ -4,6 +4,7 @@ import DiscussionHarness from '@/pages/harness/DiscussionHarness';
 import GamificationHarness from '@/pages/harness/GamificationHarness';
 import MarkdownHarness from '@/pages/harness/MarkdownHarness';
 import ContentHarness from '@/pages/harness/ContentHarness';
+import LessonView from '@/pages/learn/LessonView';
 import Showcase from '@/Showcase';
 
 /**
@@ -12,6 +13,8 @@ import Showcase from '@/Showcase';
  */
 export const harnessRoutes: RouteObject[] = [
   { path: '_harness/content', element: <ContentHarness /> },
+  // Render LessonView asli tanpa guard untuk uji A4 (course published = publik).
+  { path: '_harness/lesson/:courseSlug/:lessonSlug', element: <LessonView /> },
   { path: '_harness/exercises', element: <ExercisesHarness /> },
   { path: '_harness/discussion', element: <DiscussionHarness /> },
   { path: '_harness/gamification', element: <GamificationHarness /> },
