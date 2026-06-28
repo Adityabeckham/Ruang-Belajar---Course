@@ -2,6 +2,8 @@ import type { RouteObject } from 'react-router-dom';
 import ProtectedRoute from '@/app/ProtectedRoute';
 import PlaceholderPage from '@/pages/PlaceholderPage';
 import LessonView from '@/pages/learn/LessonView';
+import CatalogPage from '@/pages/catalog/CatalogPage';
+import CourseDetailPage from '@/pages/course/CourseDetailPage';
 
 /**
  * Route milik Dev A (Content & Learning): katalog, detail course, lesson viewer,
@@ -10,11 +12,11 @@ import LessonView from '@/pages/learn/LessonView';
 export const contentRoutes: RouteObject[] = [
   {
     path: 'courses',
-    element: <PlaceholderPage title="Katalog Course" owner="Dev A" icon="📚" />,
+    element: <CatalogPage />,
   },
   {
     path: 'courses/:slug',
-    element: <PlaceholderPage title="Detail Course" owner="Dev A" icon="📖" />,
+    element: <CourseDetailPage />,
   },
   {
     path: 'learn/:courseSlug/:lessonSlug',
