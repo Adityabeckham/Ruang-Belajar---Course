@@ -1,6 +1,7 @@
 import { mutation, query } from "./_generated/server";
 import { v } from "convex/values";
 import { parseQuizMarkdown } from "./lib/quizMarkdown";
+import { requireAdmin } from "./lib/authz";
 
 // Get exercises for a specific lesson
 export const listByLesson = query({
@@ -44,19 +45,7 @@ export const create = mutation({
     passScore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthenticated");
-
-    // Retrieve user and check role
-    const userId = identity.subject; // Depending on Auth setup
-    const profile = await ctx.db
-      .query("profiles")
-      .withIndex("by_user", (q) => q.eq("userId", userId as any))
-      .unique();
-      
-    if (!profile || profile.role !== "admin") {
-      throw new Error("Unauthorized: Admin access required");
-    }
+    await requireAdmin(ctx);
 
     let quizData = undefined;
     
@@ -93,18 +82,7 @@ export const update = mutation({
     passScore: v.optional(v.number()),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthenticated");
-
-    const userId = identity.subject;
-    const profile = await ctx.db
-      .query("profiles")
-      .withIndex("by_user", (q) => q.eq("userId", userId as any))
-      .unique();
-      
-    if (!profile || profile.role !== "admin") {
-      throw new Error("Unauthorized: Admin access required");
-    }
+    await requireAdmin(ctx);
 
     const existing = await ctx.db.get(args.id);
     if (!existing) throw new Error("Exercise not found");
@@ -137,18 +115,7 @@ export const update = mutation({
 export const remove = mutation({
   args: { id: v.id("exercises") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Unauthenticated");
-
-    const userId = identity.subject;
-    const profile = await ctx.db
-      .query("profiles")
-      .withIndex("by_user", (q) => q.eq("userId", userId as any))
-      .unique();
-      
-    if (!profile || profile.role !== "admin") {
-      throw new Error("Unauthorized: Admin access required");
-    }
+    await requireAdmin(ctx);
 
     await ctx.db.delete(args.id);
   },
