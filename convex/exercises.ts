@@ -6,11 +6,8 @@ import { parseQuizMarkdown } from "./lib/quizMarkdown";
 export const listByLesson = query({
   args: { lessonId: v.id("lessons") },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Unauthenticated");
-    }
-
+    // Definisi latihan boleh dibaca publik — kunci jawaban (correctIndex)
+    // sudah di-strip di bawah. Penilaian tetap server-side (B3).
     const exercises = await ctx.db
       .query("exercises")
       .withIndex("by_lesson", (q) => q.eq("lessonId", args.lessonId))
