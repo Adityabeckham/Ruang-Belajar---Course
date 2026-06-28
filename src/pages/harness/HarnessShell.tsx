@@ -6,6 +6,7 @@ const harnesses = [
   { to: '/_harness/exercises', label: 'exercises' },
   { to: '/_harness/discussion', label: 'discussion' },
   { to: '/_harness/gamification', label: 'gamification' },
+  { to: '/_harness/markdown', label: 'markdown' },
   { to: '/_harness/ui-kit', label: 'ui-kit' },
 ];
 
