@@ -36,6 +36,24 @@ export const storeUser = mutation({
       throw new Error("Called storeUser without authentication present");
     }
 
+    // Security Hardening: Validasi Issuer
+    // Memastikan token diterbitkan oleh domain Firebase kita, bukan disusupkan dari project lain.
+    const expectedIssuer = "https://securetoken.google.com/ruang-belajar-course";
+    if (identity.issuer !== expectedIssuer) {
+      throw new Error(`Unauthorized: Invalid token issuer ${identity.issuer}`);
+    }
+
+    // Security Hardening: Validasi Email Terverifikasi
+    // Mencegah account spoofing dari identitas palsu tanpa verifikasi email
+    if (identity.emailVerified !== true) {
+      throw new Error("Unauthorized: Email is not verified. Please verify your email first.");
+    }
+
+    // Security Hardening: Sanitasi Data
+    const safeName = identity.name ? identity.name.substring(0, 100) : "Anonymous User";
+    const safeEmail = identity.email ? identity.email.substring(0, 150) : undefined;
+    const safeImage = typeof identity.picture === "string" ? identity.picture.substring(0, 500) : undefined;
+
     // Cek jika user sudah ada
     const user = await ctx.db
       .query("users")
@@ -45,16 +63,16 @@ export const storeUser = mutation({
       .unique();
 
     if (user !== null) {
-      // User sudah ada, jika ingin update nama/gambar dll bisa di sini
+      // User sudah ada, update profil jika ada perubahan dari IdP
       if (
-        user.name !== identity.name ||
-        user.image !== identity.picture ||
-        user.email !== identity.email
+        user.name !== safeName ||
+        user.image !== safeImage ||
+        user.email !== safeEmail
       ) {
         await ctx.db.patch(user._id, {
-          name: identity.name,
-          image: typeof identity.picture === "string" ? identity.picture : undefined,
-          email: identity.email,
+          name: safeName,
+          image: safeImage,
+          email: safeEmail,
         });
       }
       return user._id;
@@ -62,9 +80,9 @@ export const storeUser = mutation({
 
     // Buat user baru
     return await ctx.db.insert("users", {
-      name: identity.name,
-      email: identity.email,
-      image: typeof identity.picture === "string" ? identity.picture : undefined,
+      name: safeName,
+      email: safeEmail,
+      image: safeImage,
       tokenIdentifier: identity.tokenIdentifier,
     });
   },
