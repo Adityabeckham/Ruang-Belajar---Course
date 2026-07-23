@@ -5,9 +5,12 @@ import { useFirebaseAuth } from './hooks/useFirebaseAuth';
 import './index.css';
 import App from './App.tsx';
 
-// Always resolve a valid URL format so ConvexProviderWithAuth is guaranteed to exist in the React tree
+// Real Convex Cloud Production Deployment URL
 const rawUrl = (import.meta.env.VITE_CONVEX_URL as string) || '';
-const convexUrl = rawUrl || 'https://ruang-belajar.convex.cloud';
+const isLocal = rawUrl.includes('127.0.0.1') || rawUrl.includes('localhost');
+
+// Use real cloud deployment on production / mobile devices
+const convexUrl = (!isLocal && rawUrl) ? rawUrl : 'https://blissful-porcupine-255.convex.cloud';
 
 const convex = new ConvexReactClient(convexUrl);
 
