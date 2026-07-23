@@ -32,14 +32,17 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: 24, textAlign: 'center', background: '#f5efe2', minHeight: '100vh', fontFamily: 'sans-serif' }}>
-          <h2 style={{ fontSize: 24, fontWeight: 'bold', color: '#17140d' }}>Ruang Belajar LMS</h2>
-          <p style={{ color: '#666', marginTop: 12 }}>Aplikasi sedang dimuat atau memulihkan sesi...</p>
+        <div style={{ padding: 24, textAlign: 'center', background: '#ff4444', minHeight: '100vh', fontFamily: 'sans-serif', color: 'white' }}>
+          <h2 style={{ fontSize: 20, fontWeight: 'bold' }}>🚨 App Error — Ruang Belajar LMS</h2>
+          <p style={{ marginTop: 12, fontSize: 14 }}>Jika melihat ini, kirim screenshot ke developer!</p>
+          <pre style={{ marginTop: 16, background: 'rgba(0,0,0,0.3)', padding: 12, borderRadius: 8, textAlign: 'left', fontSize: 11, overflowX: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
+            {this.state.error?.name}: {this.state.error?.message}{'\n'}{this.state.error?.stack?.slice(0, 500)}
+          </pre>
           <button
             onClick={() => window.location.reload()}
-            style={{ marginTop: 16, padding: '10px 20px', borderRadius: 20, background: '#12b3a4', color: '#fff', border: 'none', fontWeight: 'bold', cursor: 'pointer' }}
+            style={{ marginTop: 16, padding: '10px 20px', borderRadius: 20, background: 'white', color: '#ff4444', border: 'none', fontWeight: 'bold', cursor: 'pointer', fontSize: 16 }}
           >
-            Muat Ulang Halaman
+            Muat Ulang
           </button>
         </div>
       );
