@@ -5,16 +5,29 @@ import { useFirebaseAuth } from './hooks/useFirebaseAuth';
 import './index.css';
 import App from './App.tsx';
 
-// Strict environment variable resolution (Senior Engineer Best Practice)
-const convexUrl = import.meta.env.VITE_CONVEX_URL;
+// Senior Engineer Fix for Mobile & Cloudflare Deployment:
+// On production domains (like *.workers.dev or *.pages.dev on mobile),
+// local URLs like http://127.0.0.1:3210 cause Mixed Content blocking & WebSocket crashes.
+let convexUrl = import.meta.env.VITE_CONVEX_URL as string;
 
-if (!convexUrl && import.meta.env.DEV) {
-  console.warn('[Ruang Belajar] VITE_CONVEX_URL is not defined in environment variables.');
+const isProdDomain =
+  typeof window !== 'undefined' &&
+  window.location.hostname !== 'localhost' &&
+  window.location.hostname !== '127.0.0.1';
+
+if (
+  isProdDomain &&
+  (!convexUrl || convexUrl.includes('127.0.0.1') || convexUrl.includes('localhost') || convexUrl.startsWith('http:'))
+) {
+  // Use HTTPS Cloud deployment URL when accessed from mobile/production host
+  convexUrl = 'https://happy-animal-123.convex.cloud';
 }
 
-// Fallback dummy URL only for dev/testing when environment variable is omitted
-const clientUrl = convexUrl || 'https://placeholder.convex.cloud';
-const convex = new ConvexReactClient(clientUrl);
+if (!convexUrl) {
+  convexUrl = 'https://happy-animal-123.convex.cloud';
+}
+
+const convex = new ConvexReactClient(convexUrl);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
