@@ -5,12 +5,13 @@ import { useFirebaseAuth } from './hooks/useFirebaseAuth';
 import './index.css';
 import App from './App.tsx';
 
-// Real Convex Cloud Production Deployment URL
-const rawUrl = (import.meta.env.VITE_CONVEX_URL as string) || '';
-const isLocal = rawUrl.includes('127.0.0.1') || rawUrl.includes('localhost');
+// Strict Senior Software Engineer Standard:
+// Always resolve Convex backend URL dynamically from environment variables (Zero hardcoded URLs)
+const convexUrl = import.meta.env.VITE_CONVEX_URL as string;
 
-// Use real cloud deployment on production / mobile devices
-const convexUrl = (!isLocal && rawUrl) ? rawUrl : 'https://precious-antelope-329.convex.cloud';
+if (!convexUrl) {
+  console.error('[Ruang Belajar LMS] Missing VITE_CONVEX_URL environment variable.');
+}
 
 const convex = new ConvexReactClient(convexUrl);
 
