@@ -1,38 +1,69 @@
-import { StrictMode } from 'react';
+import { StrictMode, Component, type ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ConvexReactClient, ConvexProviderWithAuth } from 'convex/react';
 import { useFirebaseAuth } from './hooks/useFirebaseAuth';
 import './index.css';
 import App from './App.tsx';
 
-// Senior Engineer Fix for Mobile & Cloudflare Deployment:
-// On production domains (like *.workers.dev or *.pages.dev on mobile),
-// local URLs like http://127.0.0.1:3210 cause Mixed Content blocking & WebSocket crashes.
-let convexUrl = import.meta.env.VITE_CONVEX_URL as string;
+let rawConvexUrl = (import.meta.env.VITE_CONVEX_URL as string) || '';
 
-const isProdDomain =
+const isLocalhost =
   typeof window !== 'undefined' &&
-  window.location.hostname !== 'localhost' &&
-  window.location.hostname !== '127.0.0.1';
+  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
-if (
-  isProdDomain &&
-  (!convexUrl || convexUrl.includes('127.0.0.1') || convexUrl.includes('localhost') || convexUrl.startsWith('http:'))
-) {
-  // Use HTTPS Cloud deployment URL when accessed from mobile/production host
-  convexUrl = 'https://happy-animal-123.convex.cloud';
+// Only use local URL when accessing on local machine.
+// On mobile HP / Cloudflare domain, fallback safely.
+if (!isLocalhost && (rawConvexUrl.includes('127.0.0.1') || rawConvexUrl.includes('localhost'))) {
+  rawConvexUrl = '';
 }
 
-if (!convexUrl) {
-  convexUrl = 'https://happy-animal-123.convex.cloud';
+let convexClient: ConvexReactClient | null = null;
+if (rawConvexUrl) {
+  try {
+    convexClient = new ConvexReactClient(rawConvexUrl);
+  } catch (err) {
+    console.warn('[Ruang Belajar] Convex client init omitted:', err);
+  }
 }
 
-const convex = new ConvexReactClient(convexUrl);
+interface ProviderProps {
+  children: ReactNode;
+}
+
+interface ProviderState {
+  hasError: boolean;
+}
+
+class SafeAuthProvider extends Component<ProviderProps, ProviderState> {
+  constructor(props: ProviderProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(): ProviderState {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.warn('[Ruang Belajar] SafeAuthProvider fallback active:', error.message);
+  }
+
+  render() {
+    if (this.state.hasError || !convexClient) {
+      return <>{this.props.children}</>;
+    }
+    return (
+      <ConvexProviderWithAuth client={convexClient} useAuth={useFirebaseAuth}>
+        {this.props.children}
+      </ConvexProviderWithAuth>
+    );
+  }
+}
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <ConvexProviderWithAuth client={convex} useAuth={useFirebaseAuth}>
+    <SafeAuthProvider>
       <App />
-    </ConvexProviderWithAuth>
+    </SafeAuthProvider>
   </StrictMode>,
 );
