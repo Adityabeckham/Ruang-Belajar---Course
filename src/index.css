@@ -4,3 +4,125 @@
 @layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
+
+@theme {
+  --color-cream: #f5efe2;
+  --color-ink: #17140d;
+  --color-memphisTeal: #12b3a4;
+  --color-memphisCoral: #ff5b57;
+  --color-memphisMustard: #ffc531;
+  --color-memphisViolet: #6b5be6;
+  --color-memphisSky: #3aa0ff;
+  --font-display: 'Bricolage Grotesque', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+/* Memphis Outline & Hard Offset Shadows */
+.memphis-border {
+  border: 3px solid #17140d;
+}
+
+.memphis-shadow-lg {
+  box-shadow: 8px 8px 0px #17140d;
+  transition: all 0.15s ease-in-out;
+}
+
+.memphis-shadow-lg:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0px #17140d;
+}
+
+.memphis-shadow-sm {
+  box-shadow: 5px 5px 0px #17140d;
+  transition: all 0.15s ease-in-out;
+}
+
+.memphis-shadow-sm:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px #17140d;
+}
+
+.memphis-shadow-static {
+  box-shadow: 8px 8px 0px #17140d;
+}
+
+/* Marker Highlight Effect */
+.marker-highlight {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+}
+
+.marker-highlight::before {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  left: -4px;
+  right: -4px;
+  height: 26px;
+  z-index: -1;
+  transform: rotate(-1.5deg);
+}
+
+.marker-mustard::before {
+  background-color: #ffc531;
+}
+
+.marker-teal::before {
+  background-color: #12b3a4;
+}
+
+/* CSS Animations for Memphis Background Confetti */
+@keyframes floatDrift {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-18px) rotate(8deg); }
+}
+
+@keyframes slowSpin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes gentleBob {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(12px); }
+}
+
+@keyframes gentleSway {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(6deg); }
+}
+
+.anim-drift {
+  animation: floatDrift 7s ease-in-out infinite;
+}
+
+.anim-spin {
+  animation: slowSpin 24s linear infinite;
+}
+
+.anim-bob {
+  animation: gentleBob 5s ease-in-out infinite;
+}
+
+.anim-sway {
+  animation: gentleSway 6s ease-in-out infinite;
+}
+
+/* ── Global base overrides for Landing Page ── */
+
+/* Remove link underlines that Ant Design injects globally */
+.lp-root a,
+.lp-root a:hover,
+.lp-root a:focus,
+.lp-root a:visited {
+  text-decoration: none !important;
+}
+
+/* Ensure full-screen cream background — no white gaps */
+html,
+body,
+#root {
+  background-color: #f5efe2 !important;
+  min-height: 100vh;
+}
