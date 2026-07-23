@@ -5,12 +5,12 @@ import { useFirebaseAuth } from './hooks/useFirebaseAuth';
 import './index.css';
 import App from './App.tsx';
 
-// Strict Senior Software Engineer Standard:
-// Always resolve Convex backend URL dynamically from environment variables (Zero hardcoded URLs)
+// Strict Security Standard: Zero Hardcoded Production URLs in Source Code.
+// Resolved dynamically from environment variables at build/runtime.
 const convexUrl = import.meta.env.VITE_CONVEX_URL as string;
 
 if (!convexUrl) {
-  console.error('[Ruang Belajar LMS] Missing VITE_CONVEX_URL environment variable.');
+  console.error('[Ruang Belajar LMS Security Error] VITE_CONVEX_URL environment variable is missing.');
 }
 
 const convex = new ConvexReactClient(convexUrl);
