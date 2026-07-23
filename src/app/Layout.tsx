@@ -6,7 +6,7 @@ import LevelUpWatcher from '@/features/gamification/LevelUpWatcher';
 /** Shell utama: sync auth + watcher level-up + nav atas + area konten route (Outlet). */
 export default function Layout() {
   const { pathname } = useLocation();
-  const showNav = pathname !== '/';
+  const showNav = pathname !== '/' && pathname !== '/login';
 
   return (
     <div style={{ minHeight: '100vh' }}>

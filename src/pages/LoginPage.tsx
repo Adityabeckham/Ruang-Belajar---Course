@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Link, Navigate, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { signInWithPopup } from 'firebase/auth';
 import { useConvexAuth } from 'convex/react';
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 import { auth, googleProvider, githubProvider } from '@/lib/firebase';
 import { Loading, message } from '@/components/ui';
 import logoImg from '../assets/images/ruang-belajar-logo.png';
@@ -10,9 +11,21 @@ type LocationState = { from?: { pathname?: string } } | null;
 
 /** Halaman login: Google / GitHub via Firebase Auth (PRD §9 route `/login`). */
 export default function LoginPage() {
-  const { isLoading, isAuthenticated } = useConvexAuth();
+  const { isLoading: convexLoading, isAuthenticated: convexAuth } = useConvexAuth();
+  const { isLoading: firebaseLoading, isAuthenticated: firebaseAuth } = useFirebaseAuth();
   const location = useLocation();
+  const navigate = useNavigate();
   const [busy, setBusy] = useState<'google' | 'github' | null>(null);
+
+  const isAuthenticated = convexAuth || firebaseAuth;
+  const isLoading = convexLoading && firebaseLoading;
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = (location.state as LocationState)?.from?.pathname ?? '/dashboard';
+      navigate(from, { replace: true });
+    }
+  }, [isAuthenticated, location, navigate]);
 
   if (isLoading) return <Loading tip="Memeriksa sesi…" />;
 
@@ -25,8 +38,11 @@ export default function LoginPage() {
     setBusy(provider);
     try {
       await signInWithPopup(auth, provider === 'google' ? googleProvider : githubProvider);
+      const from = (location.state as LocationState)?.from?.pathname ?? '/dashboard';
+      navigate(from, { replace: true });
     } catch {
       message.error('Gagal masuk. Coba lagi.');
+    } finally {
       setBusy(null);
     }
   };
@@ -81,7 +97,7 @@ export default function LoginPage() {
 
           {/* Header */}
           <div className="flex flex-col items-center gap-3 mb-8">
-            <div className="w-14 h-14 rounded-2xl overflow-hidden memphis-border memphis-shadow-sm">
+            <div className="w-14 h-14 rounded-2xl overflow-hidden memphis-border memphis-shadow-sm ">
               <img src={logoImg} alt="Logo Ruang Belajar" className="object-cover w-full h-full" />
             </div>
             <div className="text-center">
