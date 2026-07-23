@@ -1,69 +1,24 @@
-import { StrictMode, Component, type ReactNode } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ConvexReactClient, ConvexProviderWithAuth } from 'convex/react';
 import { useFirebaseAuth } from './hooks/useFirebaseAuth';
 import './index.css';
 import App from './App.tsx';
 
-let rawConvexUrl = (import.meta.env.VITE_CONVEX_URL as string) || '';
+// Strict Senior Software Engineer Standard:
+// Always resolve Convex backend URL dynamically from environment variables (Zero hardcoded URLs)
+const convexUrl = import.meta.env.VITE_CONVEX_URL as string;
 
-const isLocalhost =
-  typeof window !== 'undefined' &&
-  (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
-
-// Only use local URL when accessing on local machine.
-// On mobile HP / Cloudflare domain, fallback safely.
-if (!isLocalhost && (rawConvexUrl.includes('127.0.0.1') || rawConvexUrl.includes('localhost'))) {
-  rawConvexUrl = '';
+if (!convexUrl) {
+  console.error('[Ruang Belajar LMS] Missing VITE_CONVEX_URL environment variable.');
 }
 
-let convexClient: ConvexReactClient | null = null;
-if (rawConvexUrl) {
-  try {
-    convexClient = new ConvexReactClient(rawConvexUrl);
-  } catch (err) {
-    console.warn('[Ruang Belajar] Convex client init omitted:', err);
-  }
-}
-
-interface ProviderProps {
-  children: ReactNode;
-}
-
-interface ProviderState {
-  hasError: boolean;
-}
-
-class SafeAuthProvider extends Component<ProviderProps, ProviderState> {
-  constructor(props: ProviderProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(): ProviderState {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error) {
-    console.warn('[Ruang Belajar] SafeAuthProvider fallback active:', error.message);
-  }
-
-  render() {
-    if (this.state.hasError || !convexClient) {
-      return <>{this.props.children}</>;
-    }
-    return (
-      <ConvexProviderWithAuth client={convexClient} useAuth={useFirebaseAuth}>
-        {this.props.children}
-      </ConvexProviderWithAuth>
-    );
-  }
-}
+const convex = new ConvexReactClient(convexUrl);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <SafeAuthProvider>
+    <ConvexProviderWithAuth client={convex} useAuth={useFirebaseAuth}>
       <App />
-    </SafeAuthProvider>
+    </ConvexProviderWithAuth>
   </StrictMode>,
 );
