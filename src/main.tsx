@@ -5,19 +5,16 @@ import { useFirebaseAuth } from './hooks/useFirebaseAuth';
 import './index.css';
 import App from './App.tsx';
 
-let rawConvexUrl = (import.meta.env.VITE_CONVEX_URL as string) || '';
+// Strict environment variable resolution (Senior Engineer Best Practice)
+const convexUrl = import.meta.env.VITE_CONVEX_URL;
 
-// Prevent Mixed Content crash on deployed HTTPS sites (like Cloudflare / Mobile phones)
-// when local http://127.0.0.1:3210 is baked into the build.
-if (
-  typeof window !== 'undefined' &&
-  window.location.protocol === 'https:' &&
-  (!rawConvexUrl || rawConvexUrl.startsWith('http://127.0.0.1') || rawConvexUrl.startsWith('http://localhost'))
-) {
-  rawConvexUrl = 'https://happy-animal-123.convex.cloud';
+if (!convexUrl && import.meta.env.DEV) {
+  console.warn('[Ruang Belajar] VITE_CONVEX_URL is not defined in environment variables.');
 }
 
-const convex = new ConvexReactClient(rawConvexUrl || 'https://happy-animal-123.convex.cloud');
+// Fallback dummy URL only for dev/testing when environment variable is omitted
+const clientUrl = convexUrl || 'https://placeholder.convex.cloud';
+const convex = new ConvexReactClient(clientUrl);
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
