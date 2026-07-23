@@ -154,7 +154,7 @@ export default function LandingPage() {
             {/* Eyebrow pill */}
             <div className="inline-flex items-center gap-2 bg-memphisViolet text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-memphisMustard animate-pulse" />
-              <span>💡 Komunitas Belajar Indonesia</span>
+              <span>💡 Learn Together, Grow Together</span>
             </div>
 
             {/* H1 */}
@@ -202,7 +202,7 @@ export default function LandingPage() {
               </div>
               <div>
                 <div className="font-display font-extrabold text-ink text-sm sm:text-base">Komunitas 100% Gratis</div>
-                <div className="font-body text-xs sm:text-sm text-ink/70">Tidak ada biaya tersembunyi, lingkungan belajar positif.</div>
+                <div className="font-body text-xs sm:text-sm text-ink/70">Tidak ada biaya tersembunyi, lingkungan belajar positif, suportif, dan gratis.</div>
               </div>
             </div>
           </div>
@@ -283,7 +283,7 @@ export default function LandingPage() {
             KAMPUS & ASOSIASI MEMBER:
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 md:gap-12 opacity-80 font-display font-bold text-sm sm:text-base md:text-xl">
-            {['UNIVERSITAS INDONESIA', 'ITB', 'UGM', 'ITS', 'BINUS'].map((name) => (
+            {['UTB', 'Polsub', 'STT NF', 'UHS', 'STMIK Mardira'].map((name) => (
               <span key={name} className="hover:opacity-100 transition-opacity">{name}</span>
             ))}
           </div>
