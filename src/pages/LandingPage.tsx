@@ -1,11 +1,17 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useConvexAuth } from 'convex/react';
+import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 import logoImg from '../assets/images/ruang-belajar-logo.png';
 import oparImg from '../assets/images/opar.jpeg';
 import adityaImg from '../assets/images/Aditya.jpeg';
 import reishanImg from '../assets/images/Reishan.jpeg';
 
 export default function LandingPage() {
+  const { isAuthenticated: convexAuth } = useConvexAuth();
+  const { isAuthenticated: firebaseAuth } = useFirebaseAuth();
+  const isAuthenticated = convexAuth || firebaseAuth;
+
   const [filterCategory, setFilterCategory] = useState<'all' | 'tech' | 'desain'>('all');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
@@ -73,27 +79,35 @@ export default function LandingPage() {
 
             {/* Desktop CTA + Mobile Hamburger */}
             <div className="flex items-center gap-2 sm:gap-3">
-              {/* CTA Buttons — hidden on very small, shown from sm */}
-              <Link
-                to="/login"
-                className="hidden sm:inline-block bg-white text-ink font-body font-bold text-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-gray-50 transition-all"
-              >
-                Masuk
-              </Link>
-              <Link
-                to="/login"
-                className="hidden sm:inline-block bg-memphisTeal text-white font-body font-bold text-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-teal-600 transition-all"
-              >
-                Daftar Gratis
-              </Link>
-
-              {/* Mobile-only Daftar Gratis pill */}
-              <Link
-                to="/login"
-                className="sm:hidden bg-memphisTeal text-white font-body font-bold text-xs px-3.5 py-2 rounded-full memphis-border"
-              >
-                Daftar
-              </Link>
+              {isAuthenticated ? (
+                <Link
+                  to="/dashboard"
+                  className="bg-memphisTeal text-white font-body font-bold text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-teal-600 transition-all"
+                >
+                  Dashboard Saya →
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="hidden sm:inline-block bg-white text-ink font-body font-bold text-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-gray-50 transition-all"
+                  >
+                    Masuk
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="hidden sm:inline-block bg-memphisTeal text-white font-body font-bold text-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-teal-600 transition-all"
+                  >
+                    Daftar Gratis
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="sm:hidden bg-memphisTeal text-white font-body font-bold text-xs px-3.5 py-2 rounded-full memphis-border"
+                  >
+                    Daftar
+                  </Link>
+                </>
+              )}
 
               {/* Hamburger */}
               <button
@@ -118,8 +132,14 @@ export default function LandingPage() {
             <a href="#study-groups" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-medium text-ink hover:bg-memphisMustard/20 transition-colors">Study Groups</a>
             <a href="#testimoni" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-medium text-ink hover:bg-memphisMustard/20 transition-colors">Testimoni</a>
             <div className="flex gap-3 pt-2">
-              <Link to="/login" className="flex-1 text-center bg-white text-ink font-body font-bold text-sm py-2.5 rounded-full memphis-border">Masuk</Link>
-              <Link to="/login" className="flex-1 text-center bg-memphisTeal text-white font-body font-bold text-sm py-2.5 rounded-full memphis-border">Daftar Gratis</Link>
+              {isAuthenticated ? (
+                <Link to="/dashboard" className="flex-1 text-center bg-memphisTeal text-white font-body font-bold text-sm py-2.5 rounded-full memphis-border">Dashboard Saya</Link>
+              ) : (
+                <>
+                  <Link to="/login" className="flex-1 text-center bg-white text-ink font-body font-bold text-sm py-2.5 rounded-full memphis-border">Masuk</Link>
+                  <Link to="/login" className="flex-1 text-center bg-memphisTeal text-white font-body font-bold text-sm py-2.5 rounded-full memphis-border">Daftar Gratis</Link>
+                </>
+              )}
             </div>
           </div>
         )}
@@ -151,10 +171,10 @@ export default function LandingPage() {
             {/* CTA Buttons */}
             <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
               <Link
-                to="/login"
+                to={isAuthenticated ? "/dashboard" : "/login"}
                 className="bg-memphisCoral text-white font-body font-bold text-sm sm:text-base lg:text-lg px-5 sm:px-7 py-3 sm:py-3.5 rounded-full memphis-border memphis-shadow-lg hover:bg-red-500 transition-all flex items-center gap-2"
               >
-                <span>Gabung Komunitas - Gratis</span>
+                <span>{isAuthenticated ? "Buka Dashboard Belajar" : "Gabung Komunitas - Gratis"}</span>
                 <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                   <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
