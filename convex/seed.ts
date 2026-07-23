@@ -1,13 +1,9 @@
-import { internalMutation } from "./_generated/server";
+import { internalMutation, mutation } from "./_generated/server";
 import { v } from "convex/values";
 import type { Id } from "./_generated/dataModel";
 
 /**
  * Bootstrap admin: promosikan user (by email) jadi admin.
- * Dipakai sekali setelah login pertama lewat UI (user baru = role student).
- *   npx convex run seed:promoteToAdmin '{"email":"kamu@contoh.com"}'
- * Internal → bisa dijalankan via `convex run` tanpa identitas login.
- * (UI kelola role penuh = Task C5.)
  */
 export const promoteToAdmin = internalMutation({
   args: { email: v.string() },
@@ -30,179 +26,151 @@ export const promoteToAdmin = internalMutation({
 });
 
 /**
- * Seed lintas-stream (Task 0.9). Jalankan dengan:
- *   npx convex run seed:run
- *
- * Mengisi: 1 admin + 1 student (+ profiles), 1 course → 2 module → 3 lesson,
- * 1 exercise tiap tipe (quiz/link/text/code), beberapa badge.
- * Idempoten: jika course "dasar-html" sudah ada, tidak melakukan apa-apa.
- *
- * Catatan: user di sini di-insert langsung ke tabel `users` (placeholder) untuk
- * data uji. User asli tetap lahir dari OAuth login. Admin pertama produksi
- * dipromosikan manual (PRD §3).
+ * Public/Internal Seed Mutation: Populates the 3 main courses matching the Landing Page
+ * (Frontend Web, UI/UX Design, Backend Dev) with modules, lessons, exercises, and badges.
  */
-export const run = internalMutation({
+export const seedAllCourses = mutation({
   args: {},
   handler: async (ctx) => {
-    const existing = await ctx.db
-      .query("courses")
-      .withIndex("by_slug", (q) => q.eq("slug", "dasar-html"))
-      .unique();
-    if (existing) {
-      return { skipped: true, reason: "sudah ter-seed (course dasar-html ada)" };
+    const existing = await ctx.db.query("courses").collect();
+    if (existing.length >= 3) {
+      return { skipped: true, reason: "Sudah ter-seed 3 course" };
     }
 
     const now = Date.now();
 
-    // ── Users + profiles ────────────────────────────────────────────────
-    const adminUser = await ctx.db.insert("users", {
-      name: "Admin Seed",
-      email: "admin@ruangbelajar.test",
-      tokenIdentifier: "seed|admin", // wajib (mapping Firebase) — data uji
-    });
-    await ctx.db.insert("profiles", {
-      userId: adminUser,
-      role: "admin",
-      displayName: "Admin Seed",
-      totalXp: 0,
-      level: 1,
-    });
+    // Find or create admin user for createdBy field
+    let adminUser = (await ctx.db.query("users").first())?._id;
+    if (!adminUser) {
+      adminUser = await ctx.db.insert("users", {
+        name: "Admin Ruang Belajar",
+        email: "admin@ruangbelajar.space",
+        tokenIdentifier: "seed|admin",
+      });
+    }
 
-    const studentUser = await ctx.db.insert("users", {
-      name: "Siswa Seed",
-      email: "siswa@ruangbelajar.test",
-      tokenIdentifier: "seed|student", // wajib (mapping Firebase) — data uji
-    });
-    await ctx.db.insert("profiles", {
-      userId: studentUser,
-      role: "student",
-      displayName: "Siswa Seed",
-      totalXp: 0,
-      level: 1,
-    });
-
-    // ── Course → modules → lessons ──────────────────────────────────────
-    const courseId = await ctx.db.insert("courses", {
-      title: "Dasar HTML",
-      slug: "dasar-html",
-      description: "Mengenal HTML dari nol: tag, struktur, dan elemen umum.",
+    // ── Course 1: Frontend Web ──────────────────────────────────────
+    const c1 = await ctx.db.insert("courses", {
+      title: "Frontend Web (HTML, CSS, JS, React)",
+      slug: "frontend-web",
+      description: "Belajar membuat website interaktif dari nol. Pembahasan mendalam layouting hingga React framework modern.",
       level: "beginner",
-      tags: ["html"],
+      tags: ["web", "html", "css", "javascript", "react"],
       published: true,
       order: 0,
       createdBy: adminUser,
     });
 
-    const modul1 = await ctx.db.insert("modules", {
-      courseId,
-      title: "Pengenalan HTML",
+    const m1_1 = await ctx.db.insert("modules", {
+      courseId: c1,
+      title: "Modul 1: Dasardan Struktur Web",
       order: 0,
     });
-    const modul2 = await ctx.db.insert("modules", {
-      courseId,
-      title: "Struktur Halaman",
+    const m1_2 = await ctx.db.insert("modules", {
+      courseId: c1,
+      title: "Modul 2: React Component & State",
       order: 1,
     });
 
-    const lesson1 = await ctx.db.insert("lessons", {
-      moduleId: modul1,
-      courseId,
-      title: "Apa itu HTML",
-      slug: "apa-itu-html",
-      contentMd:
-        "# Apa itu HTML\n\nHTML adalah bahasa markup untuk menyusun halaman web.\n\n```html\n<h1>Halo Dunia</h1>\n```",
+    const l1_1 = await ctx.db.insert("lessons", {
+      moduleId: m1_1,
+      courseId: c1,
+      title: "Pengenalan HTML5 & CSS Flexbox",
+      slug: "pengenalan-html5-css",
+      contentMd: "# HTML5 & Styling Flexbox\n\nHTML5 memberikan elemen semantik seperti `<header>`, `<main>`, `<section>`, dan `<footer>`.\n\n```css\n.container {\n  display: flex;\n  justify-[#12b3a4]: center;\n}\n```",
       order: 0,
-      xpReward: 20,
-    });
-    const lesson2 = await ctx.db.insert("lessons", {
-      moduleId: modul1,
-      courseId,
-      title: "Tag Dasar",
-      slug: "tag-dasar",
-      contentMd:
-        "# Tag Dasar\n\nBeberapa tag yang sering dipakai: `<p>`, `<a>`, `<img>`.",
-      order: 1,
-      xpReward: 20,
-    });
-    const lesson3 = await ctx.db.insert("lessons", {
-      moduleId: modul2,
-      courseId,
-      title: "Struktur Dokumen",
-      slug: "struktur-dokumen",
-      contentMd:
-        "# Struktur Dokumen\n\nDokumen HTML diawali `<!DOCTYPE html>` lalu `<html>`, `<head>`, `<body>`.",
-      order: 0,
-      xpReward: 20,
+      xpReward: 25,
     });
 
-    // ── Exercises: satu tiap tipe ───────────────────────────────────────
-    // quiz (auto-grade) — correctIndex disimpan server-side
+    const l1_2 = await ctx.db.insert("lessons", {
+      moduleId: m1_2,
+      courseId: c1,
+      title: "Komponen & State React",
+      slug: "komponen-state-react",
+      contentMd: "# React Component & State\n\nDalam React, kita menggunakan `useState` untuk mengelola state komponen.\n\n```jsx\nconst [count, setCount] = useState(0);\n```",
+      order: 0,
+      xpReward: 35,
+    });
+
+    // ── Course 2: UI/UX Design ──────────────────────────────────────
+    const c2 = await ctx.db.insert("courses", {
+      title: "UI/UX Design & Prototyping Figma",
+      slug: "uiux-design",
+      description: "Kuasai riset pengguna, wireframing, pembuatan visual UI, hingga prototyping interaktif dengan Figma untuk mobile & web.",
+      level: "intermediate",
+      tags: ["design", "figma", "ui", "ux"],
+      published: true,
+      order: 1,
+      createdBy: adminUser,
+    });
+
+    const m2_1 = await ctx.db.insert("modules", {
+      courseId: c2,
+      title: "Modul 1: Prinsip Visual & Layouting",
+      order: 0,
+    });
+
+    const l2_1 = await ctx.db.insert("lessons", {
+      moduleId: m2_1,
+      courseId: c2,
+      title: "Prinsip Typography & Memphis Design",
+      slug: "prinsip-typography-memphis",
+      contentMd: "# Typography & Memphis Aesthetics\n\nPrinsip dasar warna kontras tinggi, hard-offset shadow, dan hirarki tipografi modern.",
+      order: 0,
+      xpReward: 30,
+    });
+
+    // ── Course 3: Backend Development ───────────────────────────────
+    const c3 = await ctx.db.insert("courses", {
+      title: "Backend Development (Node.js & Express)",
+      slug: "backend-dev",
+      description: "Belajar mendesain RESTful API, mengelola database SQL/NoSQL, dan menerapkan autentikasi serta keamanan server modern.",
+      level: "advanced",
+      tags: ["backend", "nodejs", "express", "database"],
+      published: true,
+      order: 2,
+      createdBy: adminUser,
+    });
+
+    const m3_1 = await ctx.db.insert("modules", {
+      courseId: c3,
+      title: "Modul 1: REST API & Security",
+      order: 0,
+    });
+
+    const l3_1 = await ctx.db.insert("lessons", {
+      moduleId: m3_1,
+      courseId: c3,
+      title: "Membangun REST API dengan Express",
+      slug: "membangun-rest-api-express",
+      contentMd: "# REST API dengan Express.js\n\nMembuat endpoint HTTP, validasi request, dan JWT Auth.",
+      order: 0,
+      xpReward: 40,
+    });
+
+    // ── Exercises ──
     await ctx.db.insert("exercises", {
-      lessonId: lesson1,
-      courseId,
-      title: "Kuis Dasar HTML",
+      lessonId: l1_1,
+      courseId: c1,
+      title: "Kuis HTML5 & Flexbox",
       type: "quiz",
-      promptMd: "Jawab pertanyaan berikut.",
+      promptMd: "Pilihlah jawaban yang tepat.",
       xpReward: 50,
       quiz: {
         passScore: 80,
         questions: [
           {
             id: "q1",
-            questionMd: "Apa fungsi tag `<h1>`?",
-            options: ["Membuat paragraf", "Heading utama", "Membuat link"],
-            correctIndex: 1,
-          },
-          {
-            id: "q2",
-            questionMd: "Tag untuk gambar adalah?",
-            options: ["<img>", "<image>", "<picture>"],
+            questionMd: "Elemen manakah yang termasuk HTML5 semantik?",
+            options: ["<main>", "<div>", "<span>"],
             correctIndex: 0,
           },
         ],
       },
     });
-    // link — submit URL, review manual
-    await ctx.db.insert("exercises", {
-      lessonId: lesson2,
-      courseId,
-      title: "Kirim Link Latihan",
-      type: "link",
-      promptMd: "Buat halaman dengan beberapa tag dasar, kirim link CodePen-nya.",
-      xpReward: 100,
-    });
-    // text — jawaban teks/markdown, review manual
-    await ctx.db.insert("exercises", {
-      lessonId: lesson2,
-      courseId,
-      title: "Jelaskan dengan Kata-katamu",
-      type: "text",
-      promptMd: "Jelaskan perbedaan tag `<a>` dan `<img>`.",
-      xpReward: 100,
-    });
-    // code — editor in-browser (Fase 5), dgn starter
-    await ctx.db.insert("exercises", {
-      lessonId: lesson3,
-      courseId,
-      title: "Susun Struktur Dasar",
-      type: "code",
-      promptMd: "Lengkapi struktur dokumen HTML pada starter di bawah.",
-      xpReward: 100,
-      starter: {
-        html: "<!DOCTYPE html>\n<html>\n  <head></head>\n  <body></body>\n</html>",
-        css: "",
-        js: "",
-      },
-    });
 
-    // ── Badges ──────────────────────────────────────────────────────────
-    const badges: Array<{
-      key: string;
-      title: string;
-      description: string;
-      icon: string;
-      criteria: string;
-    }> = [
+    // ── Badges ──
+    const badges = [
       {
         key: "first_lesson",
         title: "Langkah Pertama",
@@ -211,33 +179,36 @@ export const run = internalMutation({
         criteria: "Selesaikan 1 lesson.",
       },
       {
-        key: "first_submission",
-        title: "Setoran Perdana",
-        description: "Mengirim submission pertama.",
-        icon: "📤",
-        criteria: "Kirim 1 submission.",
+        key: "web_dev_hero",
+        title: "Web Dev Hero",
+        description: "Menuntaskan course Frontend Web.",
+        icon: "⚡",
+        criteria: "Selesaikan course Frontend Web.",
       },
       {
-        key: "html_master",
-        title: "HTML Master",
-        description: "Menuntaskan seluruh course HTML.",
-        icon: "🏆",
-        criteria: "Selesaikan course Dasar HTML.",
+        key: "design_pro",
+        title: "Design Maestro",
+        description: "Menuntaskan course UI/UX Design.",
+        icon: "🎨",
+        criteria: "Selesaikan course UI/UX Design.",
       },
     ];
-    const badgeIds: Id<"badges">[] = [];
+
     for (const b of badges) {
-      badgeIds.push(await ctx.db.insert("badges", b));
+      const existBadge = await ctx.db
+        .query("badges")
+        .withIndex("by_key", (q) => q.eq("key", b.key))
+        .unique();
+      if (!existBadge) {
+        await ctx.db.insert("badges", b);
+      }
     }
 
     return {
-      skipped: false,
-      seededAt: now,
-      users: { adminUser, studentUser },
-      courseId,
-      modules: [modul1, modul2],
-      lessons: [lesson1, lesson2, lesson3],
-      badges: badgeIds,
+      success: true,
+      coursesCreated: [c1, c2, c3],
     };
   },
 });
+
+export const run = seedAllCourses;

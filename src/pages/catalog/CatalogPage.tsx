@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useQuery } from 'convex/react';
+import { useQuery, useMutation } from 'convex/react';
 import { api } from '../../../convex/_generated/api';
-import { Loading } from '@/components/ui';
+import { Loading, message } from '@/components/ui';
 
 const LEVEL_STYLE: Record<string, { bg: string; text: string }> = {
   beginner: { bg: 'bg-memphisTeal', text: 'Beginner' },
@@ -13,6 +13,7 @@ const LEVEL_STYLE: Record<string, { bg: string; text: string }> = {
 /** Katalog course publik (Task A3, route `/courses` — Memphis Styled). */
 export default function CatalogPage() {
   const courses = useQuery(api.courses.listPublished);
+  const seedCourses = useMutation(api.seed.seedAllCourses);
   const [level, setLevel] = useState<string>('all');
   const [tag, setTag] = useState<string>('all');
 
@@ -104,20 +105,24 @@ export default function CatalogPage() {
           <Loading minHeight={200} tip="Memuat daftar course…" />
         ) : filtered.length === 0 ? (
           <div className="bg-white rounded-3xl memphis-border memphis-shadow-lg p-8 sm:p-12 text-center max-w-lg mx-auto space-y-4">
-            <div className="text-5xl">🔍</div>
-            <h3 className="font-display font-bold text-xl text-ink">Tidak Ada Course Ditemukan</h3>
+            <div className="text-5xl">📚</div>
+            <h3 className="font-display font-bold text-xl text-ink">Belum Ada Course di Database</h3>
             <p className="text-sm text-ink/70">
-              Coba sesuaikan filter level atau tag untuk menemukan course yang sesuai.
+              Database Convex masih kosong. Klik tombol di bawah untuk mengisi 3 Course Utama (Frontend Web, UI/UX Design, Backend Dev) secara otomatis.
             </p>
-            <div className="pt-2">
+            <div className="pt-2 flex justify-center gap-3">
               <button
-                onClick={() => {
-                  setLevel('all');
-                  setTag('all');
+                onClick={async () => {
+                  try {
+                    await seedCourses();
+                    message.success('Berhasil mengisi 3 Course ke database!');
+                  } catch (e) {
+                    message.error('Gagal mengisi course: ' + (e instanceof Error ? e.message : 'Error'));
+                  }
                 }}
-                className="bg-memphisTeal text-white font-body font-bold text-sm px-5 py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-teal-600 transition-all"
+                className="bg-memphisMustard text-ink font-body font-bold text-sm px-6 py-3 rounded-full memphis-border memphis-shadow-sm hover:bg-yellow-400 transition-all flex items-center gap-2"
               >
-                Reset Filter
+                <span>⚡ Isi Data Course Otomatis</span>
               </button>
             </div>
           </div>
