@@ -10,7 +10,7 @@ const rawUrl = (import.meta.env.VITE_CONVEX_URL as string) || '';
 const isLocal = rawUrl.includes('127.0.0.1') || rawUrl.includes('localhost');
 
 // Use real cloud deployment on production / mobile devices
-const convexUrl = (!isLocal && rawUrl) ? rawUrl : 'https://blissful-porcupine-255.convex.cloud';
+const convexUrl = (!isLocal && rawUrl) ? rawUrl : 'https://precious-antelope-329.convex.cloud';
 
 const convex = new ConvexReactClient(convexUrl);
 
