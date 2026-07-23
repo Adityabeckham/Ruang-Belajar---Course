@@ -18,16 +18,34 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+.env
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
 
-# Convex generated code — regenerated locally via `npx convex dev` (or `npx convex codegen`).
-# Not committed: avoids constant merge conflicts when multiple devs run codegen.
-# See docs/IMPLEMENTATION-PLAN.md §4 (0.1).
-convex/_generated/
+# Convex generated code — committed so Cloudflare CI builds succeed without CONVEX_DEPLOY_KEY
+# convex/_generated/
 
 # TypeScript incremental build cache
 *.tsbuildinfo
