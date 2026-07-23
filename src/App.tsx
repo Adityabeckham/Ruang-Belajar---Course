@@ -34,7 +34,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       return (
         <div style={{ padding: 24, textAlign: 'center', background: '#ff4444', minHeight: '100vh', fontFamily: 'sans-serif', color: 'white' }}>
           <h2 style={{ fontSize: 20, fontWeight: 'bold' }}>🚨 App Error — Ruang Belajar LMS</h2>
-          <p style={{ marginTop: 12, fontSize: 14 }}>Jika melihat ini, kirim screenshot ke developer!</p>
+          <p style={{ marginTop: 12, fontSize: 14 }}>Jika melihat ini, segera kirim screenshot ke developer!</p>
           <pre style={{ marginTop: 16, background: 'rgba(0,0,0,0.3)', padding: 12, borderRadius: 8, textAlign: 'left', fontSize: 11, overflowX: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-all' }}>
             {this.state.error?.name}: {this.state.error?.message}{'\n'}{this.state.error?.stack?.slice(0, 500)}
           </pre>
