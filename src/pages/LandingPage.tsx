@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { useConvexAuth } from 'convex/react';
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
 
-// Lucide Icons (Senior Engineer Standard: Modern, Clean & Consistent Icon System)
+// Lucide Icons 
 import {
   MessageCircle,
   Mail,
   Globe,
-  Sparkles,
+  LucideGroup,
   Users,
   BookOpen,
   GraduationCap,
@@ -27,7 +27,8 @@ import {
   Palette,
   Terminal,
   Heart,
-  ExternalLink
+  ExternalLink,
+  CheckCircle2
 } from 'lucide-react';
 
 import logoImg from '../assets/images/ruang-belajar-logo.png';
@@ -54,25 +55,25 @@ const InstagramIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
 
 const WhatsAppIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.15 4.195 4.354-1.144z"/>
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.15 4.195 4.354-1.144z" />
   </svg>
 );
 
 const YouTubeIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
   </svg>
 );
 
 const GitHubIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
   </svg>
 );
 
 const LinkedInIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
-    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z"/>
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z" />
   </svg>
 );
 
@@ -84,8 +85,8 @@ const CAMPUS_PARTNERS = [
   { name: 'Universitas Teknologi Bandung', logo: utb, alt: 'UTB Bandung', shortName: 'UTB Bandung' },
   { name: 'Politeknik Negeri Subang', logo: polsub, alt: 'POLSUB', shortName: 'POLSUB Subang' },
   { name: 'STMIK Mardira Indonesia', logo: mardira, alt: 'STMIK Mardira', shortName: 'STMIK MARDIRA' },
-  { name: 'Universitas Harapan Bangsa', logo: UHS, alt: 'UHS', shortName: 'UHS Purwokerto' },
-  { name: 'STT Terpadu Nurul Fikri', logo: sttnf, alt: 'STT NF', shortName: 'STT NURUL FIKRI' },
+  { name: 'Universitas Harapan Bangsa', logo: UHS, alt: 'UHS', shortName: 'UHS Bandung' },
+  { name: 'STT Terpadu Nurul Fikri', logo: sttnf, alt: 'STT NF', shortName: 'STT NF Depok' },
 ];
 
 const TENTANG_PILLARS = [
@@ -118,8 +119,8 @@ const TESTIMONIALS = [
     quote: 'Sebagai desainer grafis, awalnya saya nggak yakin bisa belajar coding. Tapi setelah gabung di Ruang Belajar, saya jadi ngerti banyak hal! Kursusnya jelas dan mudah dipahami. Sekarang saya bisa bikin website sederhana sendiri. Komunitasnya juga asyik banget buat nanya-nanya!',
     img: oparImg,
     name: 'Opar Yusuf',
-    role: 'Graphic Designer & UI Contributor',
-    campus: 'UTB Bandung',
+    role: 'Graphic Designer',
+    campus: 'Umum',
     rating: 5,
     tag: 'Design & Code',
   },
@@ -129,7 +130,7 @@ const TESTIMONIALS = [
     img: adityaImg,
     name: 'Aditya Beckham',
     role: 'Web Developer Intern at Mahreen Indonesia',
-    campus: 'Politeknik Negeri Subang',
+    campus: 'Universitas Teknologi Bandung',
     rating: 5,
     tag: 'Web Development',
   },
@@ -138,20 +139,10 @@ const TESTIMONIALS = [
     quote: 'Ruang belajar ini seperti light mode di tengah kebingungan, tenang, fokus, dan nyaman untuk belajar IT. Pembahasannya runtut dan ruang diskusinya sangat suportif untuk mahasiswa yang ingin memperdalam skill praktis.',
     img: reishanImg,
     name: 'Muhammad Reishan Asvialdy',
-    role: 'Mahasiswa Computer Science',
+    role: 'Mahasiswa Teknik Informatika',
     campus: 'Universitas Teknologi Bandung',
     rating: 5,
-    tag: 'Computer Science',
-  },
-  {
-    id: 4,
-    quote: 'Materi terstruktur dan latihan prakteknya langsung kepake buat nugas kuliah dan bikin portofolio. Komunitasnya responsif banget kalau kita stuck di bug error!',
-    img: oparImg,
-    name: 'Siti Rahmawati',
-    role: 'Frontend Learning Member',
-    campus: 'STT Terpadu Nurul Fikri',
-    rating: 5,
-    tag: 'Frontend Dev',
+    tag: 'Teknik Informatika',
   },
 ];
 
@@ -345,7 +336,7 @@ export default function LandingPage() {
             <a href="#testimoni" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Testimoni</a>
             <Link to="/courses" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-memphisViolet hover:bg-memphisViolet/10 transition-colors flex items-center gap-2">
               <BookOpen className="w-4 h-4" />
-              <span>Katalog Kursus 🚀</span>
+              <span>Katalog Kursus</span>
             </Link>
             <div className="flex gap-3 pt-2">
               {isAuthenticated ? (
@@ -369,8 +360,8 @@ export default function LandingPage() {
           <div className="lg:col-span-7 space-y-6">
             {/* Eyebrow pill */}
             <div className="inline-flex items-center gap-2 bg-memphisViolet text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm">
-              <Sparkles className="w-4 h-4 text-memphisMustard animate-pulse" />
-              <span>LEARN TOGETHER, GROW TOGETHER</span>
+              <LucideGroup className="w-4 h-4 text-memphisMustard animate-pulse" />
+              <span>KOMUNITAS BELAJAR INDONESIA</span>
             </div>
 
             {/* H1 */}
@@ -403,11 +394,11 @@ export default function LandingPage() {
 
             {/* Trust badges */}
             <div className="pt-5 flex items-center gap-4 border-t-2 border-ink/10">
-              <div className="flex -space-x-3">
+              <div className="flex -space-x-2">
                 {[
                   { bg: 'bg-memphisCoral', label: '100%' },
-                  { bg: 'bg-memphisTeal', label: 'IT' },
-                  { bg: 'bg-memphisViolet', label: 'UI' },
+                  { bg: 'bg-memphisTeal', label: 'Seru' },
+                  { bg: 'bg-memphisViolet', label: 'Gratis' },
                 ].map((item, idx) => (
                   <div key={idx} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${item.bg} text-white font-bold text-xs flex items-center justify-center border-2 border-ink memphis-shadow-sm`}>
                     {item.label}
@@ -426,7 +417,7 @@ export default function LandingPage() {
             <div className="bg-white rounded-3xl p-5 sm:p-7 memphis-border memphis-shadow-lg relative overflow-hidden">
               <div className="flex items-center justify-between mb-4">
                 <span className="bg-memphisMustard text-ink text-xs font-bold px-3 py-1 rounded-full memphis-border uppercase tracking-wider flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <GraduationCap className="w-3.5 h-3.5" />
                   STUDY GROUP HIGHLIGHT
                 </span>
                 <span className="text-xs text-ink/60 font-bold">Terbaru 2026</span>
@@ -534,7 +525,7 @@ export default function LandingPage() {
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight text-ink">
               Wadah Belajar Inklusif & Gratis untuk{' '}
-              <span className="marker-highlight marker-coral text-white px-2">Generasi Digital</span>
+              <span className="marker-highlight marker-mustard text-ink">Generasi Digital</span>
             </h2>
             <p className="font-body text-base sm:text-lg text-ink/75 mt-4 leading-relaxed">
               Ruang Belajar adalah komunitas pembelajaran digital independen Indonesia yang didirikan untuk menjembatani generasi muda dengan kebutuhan teknologi modern melalui ekosistem belajar yang terstruktur, positif, dan 100% tanpa biaya.
@@ -668,7 +659,7 @@ export default function LandingPage() {
                 STUDY GROUPS AKTIF
               </div>
               <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink">
-                Temukan Study Group Favoritmu
+                Temukan Study Group <span className="marker-highlight marker-mustard text-ink">Favoritmu</span>
               </h2>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -786,7 +777,7 @@ export default function LandingPage() {
               💬 TESTIMONI MEMBER KOMUNITAS
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink">
-              Apa kata mereka setelah join Ruang Belajar?
+              Apa kata mereka setelah join <span className="marker-highlight marker-mustard text-ink">Ruang Belajar?</span>
             </h2>
             <p className="font-body text-sm sm:text-base text-ink/70 mt-2">
               Kisah nyata pengalaman belajar & berkembang bersama teman-teman komunitas.
@@ -885,6 +876,69 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── FINAL CTA SECTION (JOIN COMMUNITY BANNER) ── */}
+      <section className="py-16 sm:py-20 relative z-10 bg-memphisMustard border-t-4 border-ink">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 md:p-16 memphis-border memphis-shadow-static text-center max-w-4xl mx-auto relative overflow-hidden">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-memphisCoral text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm mb-6">
+              <Rocket className="w-4 h-4" />
+              <span>SIAP UNTUK MULAI BELAJAR?</span>
+            </div>
+
+            {/* Title */}
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink leading-tight mb-4">
+              Tunggu Apa Lagi? Gabung Komunitas <span className="marker-highlight marker-violet text-white px-2">Ruang Belajar</span> Sekarang!
+            </h2>
+
+            {/* Description */}
+            <p className="font-body text-base sm:text-lg text-ink/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+              Dapatkan akses gratis ke seluruh materi, gabung study group terstruktur, dan bangun jaringan koneksi dengan ribuan teman belajar di seluruh Indonesia.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+              <Link
+                to={isAuthenticated ? "/dashboard" : "/login"}
+                className="bg-memphisTeal text-white font-body font-bold text-base sm:text-lg px-7 py-3.5 sm:px-8 sm:py-4 rounded-full memphis-border memphis-shadow-lg hover:bg-teal-600 transition-all flex items-center gap-2"
+              >
+                <span>{isAuthenticated ? "Masuk ke Dashboard Saya" : "Daftar Sekarang - 100% Gratis"}</span>
+                <ArrowRight className="w-5 h-5 shrink-0" />
+              </Link>
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Admin%20Ruang%20Belajar,%20saya%20ingin%20gabung%20komunitas"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-ink font-body font-bold text-base sm:text-lg px-7 py-3.5 sm:px-8 sm:py-4 rounded-full memphis-border memphis-shadow-lg hover:bg-gray-50 transition-all flex items-center gap-2"
+              >
+                <WhatsAppIcon className="w-5 h-5 text-emerald-600" />
+                <span>Grup WhatsApp</span>
+              </a>
+            </div>
+
+            {/* Trust points */}
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm font-bold text-ink/75 pt-6 border-t-2 border-ink/10">
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-memphisTeal" />
+                <span>100% Gratis Selamanya</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-memphisCoral" />
+                <span>Lingkungan Suportif</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-memphisViolet" />
+                <span>Studi Kasus & Proyek Nyata</span>
+              </div>
+            </div>
+
+            {/* Decorative background shapes */}
+            <div className="absolute -top-10 -left-10 w-32 h-32 rounded-full bg-memphisTeal/10 pointer-events-none" />
+            <div className="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-memphisCoral/10 pointer-events-none" />
+          </div>
+        </div>
+      </section>
+
       {/* ── FOOTER ── */}
       <footer className="bg-ink text-white border-t-4 border-ink py-10 sm:py-14 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -897,7 +951,7 @@ export default function LandingPage() {
                 <span className="font-display font-extrabold text-xl sm:text-2xl text-white">Ruang Belajar</span>
               </div>
               <p className="text-white/75 max-w-sm text-sm leading-relaxed">
-                Komunitas pembelajaran online Indonesia yang menyediakan lingkungan suportif untuk mengembangkan skill IT & Desain bersama.
+                Komunitas pembelajaran online Indonesia yang menyediakan lingkungan suportif untuk mengembangkan kompetensi bersama.
               </p>
               {/* Media Sosial Badges */}
               <div className="pt-2">
@@ -934,36 +988,11 @@ export default function LandingPage() {
               <div><a href="#testimoni" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Testimoni Member</a></div>
               <div><Link to="/courses" className="text-memphisSky hover:underline flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5" />Katalog Kursus</Link></div>
             </div>
-
-            {/* Kontak & Official Channels */}
-            <div className="lg:col-span-4 space-y-3 text-sm">
-              <div className="font-display font-bold text-memphisMustard uppercase tracking-wider mb-4">Kontak & Saluran Resmi</div>
-              <div className="flex items-center gap-2.5 text-white/90">
-                <Mail className="w-4 h-4 text-memphisTeal shrink-0" />
-                <a href="mailto:info@ruangbelajar.space" className="hover:underline">info@ruangbelajar.space</a>
-              </div>
-              <div className="flex items-center gap-2.5 text-white/90">
-                <Globe className="w-4 h-4 text-memphisTeal shrink-0" />
-                <a href="https://ruangbelajar.space" target="_blank" rel="noopener noreferrer" className="hover:underline">ruangbelajar.space</a>
-              </div>
-              <div className="flex items-center gap-2.5 text-white/90">
-                <MessageCircle className="w-4 h-4 text-emerald-400 shrink-0" />
-                <a href="https://wa.me/6281234567890" target="_blank" rel="noopener noreferrer" className="hover:underline">Grup WhatsApp Komunitas</a>
-              </div>
-              <div className="flex items-center gap-2.5 text-white/90">
-                <InstagramIcon className="w-4 h-4 text-pink-400 shrink-0" />
-                <a href="https://instagram.com/ruangbelajar.space" target="_blank" rel="noopener noreferrer" className="hover:underline">Instagram @ruangbelajar.space</a>
-              </div>
-              <div className="pt-2 text-xs text-white/60">
-                🇮🇩 Komunitas Pendidikan Digital Indonesia — 100% Gratis Selamanya.
-              </div>
-            </div>
-
           </div>
 
           {/* Bottom bar */}
           <div className="border-t border-white/10 pt-6 text-xs text-white/50 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>© 2026 Ruang Belajar Komunitas. Hak Cipta Dilindungi.</div>
+            <div>© 2026 Komunitas Ruang Belajar. Hak Cipta Dilindungi.</div>
             <div className="flex gap-4">
               <a href="#" className="text-white/80 hover:text-memphisTeal transition-colors">Syarat & Ketentuan</a>
               <a href="#" className="text-white/80 hover:text-memphisTeal transition-colors">Kebijakan Privasi</a>
