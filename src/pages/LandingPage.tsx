@@ -2,6 +2,35 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useConvexAuth } from 'convex/react';
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
+
+// Lucide Icons 
+import {
+  MessageCircle,
+  Mail,
+  Globe,
+  LucideGroup,
+  Users,
+  BookOpen,
+  GraduationCap,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Play,
+  Star,
+  Menu,
+  X,
+  Target,
+  Rocket,
+  Handshake,
+  Calendar,
+  Code2,
+  Palette,
+  Terminal,
+  Heart,
+  ExternalLink,
+  CheckCircle2
+} from 'lucide-react';
+
 import logoImg from '../assets/images/ruang-belajar-logo.png';
 import oparImg from '../assets/images/opar.jpeg';
 import adityaImg from '../assets/images/Aditya.jpeg';
@@ -13,13 +42,49 @@ import UHS from '../assets/images/UHS.webp';
 import sttnf from '../assets/images/sttnf.png';
 
 // ─────────────────────────────────────────────────────────────
+// BRAND SOCIAL MEDIA SVG ICONS (100% Vector Crisp & Accurate)
+// ─────────────────────────────────────────────────────────────
+
+const InstagramIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+  </svg>
+);
+
+const WhatsAppIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-1.15 4.195 4.354-1.144z" />
+  </svg>
+);
+
+const YouTubeIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+  </svg>
+);
+
+const GitHubIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+  </svg>
+);
+
+const LinkedInIcon = ({ className = "w-5 h-5" }: { className?: string }) => (
+  <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28z" />
+  </svg>
+);
+
+// ─────────────────────────────────────────────────────────────
 // DATA STRUCTURES (Scalable & Maintainable Architecture)
 // ─────────────────────────────────────────────────────────────
 
 const CAMPUS_PARTNERS = [
   { name: 'Universitas Teknologi Bandung', logo: utb, alt: 'UTB Bandung', shortName: 'UTB Bandung' },
   { name: 'Politeknik Negeri Subang', logo: polsub, alt: 'POLSUB', shortName: 'POLSUB Subang' },
-  { name: 'STMIK Mardira Indonesia', logo: mardira, alt: 'STMIK Mardira', shortName: 'STMIK Mardira' },
+  { name: 'STMIK Mardira Indonesia', logo: mardira, alt: 'STMIK Mardira', shortName: 'STMIK MARDIRA' },
   { name: 'Universitas Harapan Bangsa', logo: UHS, alt: 'UHS', shortName: 'UHS Bandung' },
   { name: 'STT Terpadu Nurul Fikri', logo: sttnf, alt: 'STT NF', shortName: 'STT NF Depok' },
 ];
@@ -30,21 +95,21 @@ const TENTANG_PILLARS = [
     badge: 'VISI UTAMA',
     title: 'Ekosistem Belajar Inklusif',
     desc: 'Menciptakan wadah pembelajaran IT & Kreatif gratis yang dapat diakses oleh siapapun di Indonesia tanpa hambatan finansial atau latar belakang.',
-    icon: '🎯',
+    icon: Target,
   },
   {
     bg: 'bg-memphisTeal',
     badge: 'MISI KOMUNITAS',
     title: 'Praktis & Siap Kerja',
     desc: 'Fokus pada studi kasus nyata, pengerjaan proyek portofolio, dan bimbingan langsung dari praktisi industri yang berpengalaman.',
-    icon: '🚀',
+    icon: Rocket,
   },
   {
     bg: 'bg-memphisViolet',
     badge: 'NILAI UTAMA',
     title: 'Kolaborasi & Suportif',
     desc: 'Mengutamakan budaya saling bantu, belajar bersama tanpa judging, dan lingkungan komunitas yang aman, positif, serta menyenangkan.',
-    icon: '🤝',
+    icon: Handshake,
   },
 ];
 
@@ -54,7 +119,7 @@ const TESTIMONIALS = [
     quote: 'Sebagai desainer grafis, awalnya saya nggak yakin bisa belajar coding. Tapi setelah gabung di Ruang Belajar, saya jadi ngerti banyak hal! Kursusnya jelas dan mudah dipahami. Sekarang saya bisa bikin website sederhana sendiri. Komunitasnya juga asyik banget buat nanya-nanya!',
     img: oparImg,
     name: 'Opar Yusuf',
-    role: 'Graphic Designer & UI Contributor',
+    role: 'Graphic Designer',
     campus: 'Umum',
     rating: 5,
     tag: 'Design & Code',
@@ -78,6 +143,44 @@ const TESTIMONIALS = [
     campus: 'Universitas Teknologi Bandung',
     rating: 5,
     tag: 'Teknik Informatika',
+  },
+];
+
+const SOCIAL_LINKS = [
+  {
+    name: 'Instagram',
+    icon: InstagramIcon,
+    url: 'https://instagram.com/ruangbelajar.space',
+    color: 'hover:bg-pink-500 hover:text-white',
+    handle: '@ruangbelajar.space',
+  },
+  {
+    name: 'WhatsApp',
+    icon: WhatsAppIcon,
+    url: 'https://wa.me/6281234567890?text=Halo%20Admin%20Ruang%20Belajar%20Komunitas',
+    color: 'hover:bg-emerald-500 hover:text-white',
+    handle: '+62 812-3456-7890',
+  },
+  {
+    name: 'YouTube',
+    icon: YouTubeIcon,
+    url: 'https://youtube.com/@ruangbelajar-space',
+    color: 'hover:bg-red-600 hover:text-white',
+    handle: 'Ruang Belajar Indonesia',
+  },
+  {
+    name: 'GitHub',
+    icon: GitHubIcon,
+    url: 'https://github.com/Adityabeckham/Ruang-Belajar---Course',
+    color: 'hover:bg-gray-800 hover:text-white',
+    handle: 'Ruang-Belajar-Course',
+  },
+  {
+    name: 'LinkedIn',
+    icon: LinkedInIcon,
+    url: 'https://linkedin.com/company/ruangbelajar-space',
+    color: 'hover:bg-blue-600 hover:text-white',
+    handle: 'Ruang Belajar Community',
   },
 ];
 
@@ -172,7 +275,8 @@ export default function LandingPage() {
               <a href="#fitur" className="font-body font-bold text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Aktivitas</a>
               <a href="#study-groups" className="font-body font-bold text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Study Groups</a>
               <a href="#testimoni" className="font-body font-bold text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Testimoni</a>
-              <Link to="/courses" className="font-body font-bold text-memphisViolet hover:text-indigo-700 transition-colors text-sm lg:text-base flex items-center gap-1">
+              <Link to="/courses" className="font-body font-bold text-memphisViolet hover:text-indigo-700 transition-colors text-sm lg:text-base flex items-center gap-1.5">
+                <BookOpen className="w-4 h-4 text-memphisViolet" />
                 <span>Katalog Kursus</span>
                 <span className="text-xs bg-memphisMustard text-ink px-1.5 py-0.5 rounded border border-ink">NEW</span>
               </Link>
@@ -183,9 +287,10 @@ export default function LandingPage() {
               {isAuthenticated ? (
                 <Link
                   to="/dashboard"
-                  className="bg-memphisTeal text-white font-body font-bold text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-teal-600 transition-all"
+                  className="bg-memphisTeal text-white font-body font-bold text-xs sm:text-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full memphis-border memphis-shadow-sm hover:bg-teal-600 transition-all flex items-center gap-1.5"
                 >
-                  Dashboard Saya →
+                  <span>Dashboard Saya</span>
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               ) : (
                 <>
@@ -216,11 +321,7 @@ export default function LandingPage() {
                 className="md:hidden p-2 rounded-xl memphis-border bg-white hover:bg-cream transition-colors"
                 aria-label="Toggle Navigation Menu"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                  {mobileMenuOpen
-                    ? <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    : <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />}
-                </svg>
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
             </div>
           </nav>
@@ -233,7 +334,10 @@ export default function LandingPage() {
             <a href="#fitur" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Aktivitas</a>
             <a href="#study-groups" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Study Groups</a>
             <a href="#testimoni" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Testimoni</a>
-            <Link to="/courses" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-memphisViolet hover:bg-memphisViolet/10 transition-colors">Katalog Kursus</Link>
+            <Link to="/courses" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-memphisViolet hover:bg-memphisViolet/10 transition-colors flex items-center gap-2">
+              <BookOpen className="w-4 h-4" />
+              <span>Katalog Kursus</span>
+            </Link>
             <div className="flex gap-3 pt-2">
               {isAuthenticated ? (
                 <Link to="/dashboard" className="flex-1 text-center bg-memphisTeal text-white font-body font-bold text-sm py-2.5 rounded-full memphis-border">Dashboard Saya</Link>
@@ -256,8 +360,8 @@ export default function LandingPage() {
           <div className="lg:col-span-7 space-y-6">
             {/* Eyebrow pill */}
             <div className="inline-flex items-center gap-2 bg-memphisViolet text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm">
-              <span className="w-2.5 h-2.5 rounded-full bg-memphisMustard animate-pulse" />
-              <span>💡 KOMUNITAS BELAJAR INDONESIA</span>
+              <LucideGroup className="w-4 h-4 text-memphisMustard animate-pulse" />
+              <span>KOMUNITAS BELAJAR INDONESIA</span>
             </div>
 
             {/* H1 */}
@@ -278,9 +382,7 @@ export default function LandingPage() {
                 className="bg-memphisCoral text-white font-body font-bold text-sm sm:text-base lg:text-lg px-5 sm:px-7 py-3 sm:py-3.5 rounded-full memphis-border memphis-shadow-lg hover:bg-red-500 transition-all flex items-center gap-2"
               >
                 <span>{isAuthenticated ? "Buka Dashboard Belajar" : "Gabung Komunitas - Gratis"}</span>
-                <svg className="w-5 h-5 shrink-0" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                  <path d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
+                <ArrowRight className="w-5 h-5 shrink-0" />
               </Link>
               <a
                 href="#study-groups"
@@ -292,11 +394,11 @@ export default function LandingPage() {
 
             {/* Trust badges */}
             <div className="pt-5 flex items-center gap-4 border-t-2 border-ink/10">
-              <div className="flex -space-x-1">
+              <div className="flex -space-x-2">
                 {[
                   { bg: 'bg-memphisCoral', label: '100%' },
-                  { bg: 'bg-memphisTeal', label: 'Gratis' },
-                  { bg: 'bg-memphisViolet', label: 'Seru' },
+                  { bg: 'bg-memphisTeal', label: 'Seru' },
+                  { bg: 'bg-memphisViolet', label: 'Gratis' },
                 ].map((item, idx) => (
                   <div key={idx} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${item.bg} text-white font-bold text-xs flex items-center justify-center border-2 border-ink memphis-shadow-sm`}>
                     {item.label}
@@ -314,7 +416,8 @@ export default function LandingPage() {
           <div className="lg:col-span-5 relative">
             <div className="bg-white rounded-3xl p-5 sm:p-7 memphis-border memphis-shadow-lg relative overflow-hidden">
               <div className="flex items-center justify-between mb-4">
-                <span className="bg-memphisMustard text-ink text-xs font-bold px-3 py-1 rounded-full memphis-border uppercase tracking-wider">
+                <span className="bg-memphisMustard text-ink text-xs font-bold px-3 py-1 rounded-full memphis-border uppercase tracking-wider flex items-center gap-1">
+                  <GraduationCap className="w-3.5 h-3.5" />
                   STUDY GROUP HIGHLIGHT
                 </span>
                 <span className="text-xs text-ink/60 font-bold">Terbaru 2026</span>
@@ -329,7 +432,10 @@ export default function LandingPage() {
 
               {/* Progress card */}
               <div className="bg-cream rounded-xl p-3 sm:p-4 memphis-border mb-4 sm:mb-5">
-                <div className="text-[10px] sm:text-xs font-bold mb-2 sm:mb-3 text-ink">Aktivitas Belajar (Menit)</div>
+                <div className="text-[10px] sm:text-xs font-bold mb-2 sm:mb-3 text-ink flex items-center justify-between">
+                  <span>Aktivitas Belajar (Menit)</span>
+                  <span className="text-memphisTeal font-extrabold">+85% Konsistensi</span>
+                </div>
                 <div className="flex items-end justify-between h-24 sm:h-28 gap-1.5 sm:gap-2 px-1 sm:px-2">
                   {[
                     { bg: 'bg-memphisMustard', h: '45%', label: 'Senin' },
@@ -351,9 +457,10 @@ export default function LandingPage() {
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setDemoModalOpen(true)}
-                  className="flex-1 bg-memphisViolet text-white font-body font-bold text-xs sm:text-sm py-2.5 sm:py-3 rounded-xl memphis-border memphis-shadow-sm hover:bg-indigo-700 transition-colors flex items-center justify-center gap-1.5"
+                  className="flex-1 bg-memphisViolet text-white font-body font-bold text-xs sm:text-sm py-2.5 sm:py-3 rounded-xl memphis-border memphis-shadow-sm hover:bg-indigo-700 transition-colors flex items-center justify-center gap-2"
                 >
-                  <span>▶ Tonton Demo Kelas</span>
+                  <Play className="w-4 h-4 fill-white" />
+                  <span>Tonton Demo Kelas</span>
                 </button>
                 <Link
                   to="/courses"
@@ -376,8 +483,9 @@ export default function LandingPage() {
             {/* Label */}
             <div className="flex items-center gap-2 shrink-0">
               <span className="w-3 h-3 rounded-full bg-memphisMustard animate-ping" />
-              <div className="font-display font-extrabold text-memphisMustard text-xs sm:text-sm tracking-widest uppercase text-center md:text-left">
-                KAMPUS & ASOSIASI MEMBER:
+              <div className="font-display font-extrabold text-memphisMustard text-xs sm:text-sm tracking-widest uppercase text-center md:text-left flex items-center gap-2">
+                <GraduationCap className="w-4 h-4" />
+                <span>KAMPUS & ASOSIASI MEMBER:</span>
               </div>
             </div>
 
@@ -426,29 +534,32 @@ export default function LandingPage() {
 
           {/* 3 Pillar Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-14">
-            {TENTANG_PILLARS.map((pillar) => (
-              <div
-                key={pillar.title}
-                className="bg-cream rounded-3xl p-6 sm:p-8 memphis-border memphis-shadow-lg hover:-translate-y-1.5 transition-transform flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <span className={`w-12 h-12 rounded-2xl ${pillar.bg} text-white text-2xl flex items-center justify-center memphis-border`}>
-                      {pillar.icon}
-                    </span>
-                    <span className="font-display font-extrabold text-xs px-3 py-1 bg-white text-ink rounded-full memphis-border">
-                      {pillar.badge}
-                    </span>
+            {TENTANG_PILLARS.map((pillar) => {
+              const IconComp = pillar.icon;
+              return (
+                <div
+                  key={pillar.title}
+                  className="bg-cream rounded-3xl p-6 sm:p-8 memphis-border memphis-shadow-lg hover:-translate-y-1.5 transition-transform flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-5">
+                      <span className={`w-12 h-12 rounded-2xl ${pillar.bg} text-white flex items-center justify-center memphis-border`}>
+                        <IconComp className="w-6 h-6" />
+                      </span>
+                      <span className="font-display font-extrabold text-xs px-3 py-1 bg-white text-ink rounded-full memphis-border">
+                        {pillar.badge}
+                      </span>
+                    </div>
+                    <h3 className="font-display font-extrabold text-xl sm:text-2xl text-ink mb-3">
+                      {pillar.title}
+                    </h3>
+                    <p className="font-body text-sm sm:text-base text-ink/80 leading-relaxed">
+                      {pillar.desc}
+                    </p>
                   </div>
-                  <h3 className="font-display font-extrabold text-xl sm:text-2xl text-ink mb-3">
-                    {pillar.title}
-                  </h3>
-                  <p className="font-body text-sm sm:text-base text-ink/80 leading-relaxed">
-                    {pillar.desc}
-                  </p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Impact & Key Statistics Banner */}
@@ -505,44 +616,35 @@ export default function LandingPage() {
                 accent: 'bg-memphisCoral/10',
                 title: 'Study Groups',
                 desc: 'Gabung grup belajar sesuai minat dan level kamu. Belajar bareng dengan kurikulum terstruktur jadi jauh lebih asyik dan efektif!',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M18 18.72a6 6 0 0 0-3.44-5.32M12 11a4 4 0 1 0-4-4m14 8a6 6 0 0 0-3.44-5.32M12 11a4 4 0 1 1-4-4m0 8h8M8 19h8" />
-                  </svg>
-                ),
+                icon: Users,
               },
               {
                 bg: 'bg-memphisTeal',
                 accent: 'bg-memphisTeal/10',
                 title: 'Mentorship & Sharing',
                 desc: 'Dapatkan bimbingan langsung dari senior di bidang IT, serta bagikan pengetahuanmu kepada sesama member komunitas.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h6M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                ),
+                icon: Heart,
               },
               {
                 bg: 'bg-memphisViolet',
                 accent: 'bg-memphisViolet/10',
                 title: 'Workshop & Meetup',
                 desc: 'Ikuti workshop online reguler dan meetup offline di berbagai kota untuk memperluas jaringan koneksi profesionalmu.',
-                icon: (
-                  <svg className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                ),
+                icon: Calendar,
               },
-            ].map((card) => (
-              <div key={card.title} className="bg-white rounded-3xl p-6 sm:p-8 memphis-border memphis-shadow-lg relative overflow-hidden">
-                <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ${card.bg} text-white flex items-center justify-center memphis-border memphis-shadow-sm mb-5 sm:mb-6`}>
-                  {card.icon}
+            ].map((card) => {
+              const IconComponent = card.icon;
+              return (
+                <div key={card.title} className="bg-white rounded-3xl p-6 sm:p-8 memphis-border memphis-shadow-lg relative overflow-hidden">
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ${card.bg} text-white flex items-center justify-center memphis-border memphis-shadow-sm mb-5 sm:mb-6`}>
+                    <IconComponent className="w-7 h-7" />
+                  </div>
+                  <h3 className="font-display font-bold text-xl sm:text-2xl mb-3 text-ink">{card.title}</h3>
+                  <p className="font-body text-ink/75 leading-relaxed text-sm sm:text-base">{card.desc}</p>
+                  <div className={`absolute -bottom-8 -right-8 w-28 h-28 rounded-full ${card.accent} pointer-events-none`} />
                 </div>
-                <h3 className="font-display font-bold text-xl sm:text-2xl mb-3 text-ink">{card.title}</h3>
-                <p className="font-body text-ink/75 leading-relaxed text-sm sm:text-base">{card.desc}</p>
-                <div className={`absolute -bottom-8 -right-8 w-28 h-28 rounded-full ${card.accent} pointer-events-none`} />
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -557,7 +659,7 @@ export default function LandingPage() {
                 STUDY GROUPS AKTIF
               </div>
               <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink">
-                Temukan Study Group<span className="marker-highlight marker-mustard text-ink">Favoritmu</span>
+                Temukan Study Group <span className="marker-highlight marker-mustard text-ink">Favoritmu</span>
               </h2>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -592,6 +694,7 @@ export default function LandingPage() {
                 btnBg: 'bg-memphisMustard text-ink hover:bg-yellow-400',
                 priceColor: 'text-memphisCoral',
                 key: 'frontend-web',
+                icon: Code2,
               },
               {
                 category: 'desain',
@@ -604,6 +707,7 @@ export default function LandingPage() {
                 btnBg: 'bg-memphisTeal text-white hover:bg-teal-600',
                 priceColor: 'text-memphisTeal',
                 key: 'uiux-design',
+                icon: Palette,
               },
               {
                 category: 'tech',
@@ -616,43 +720,49 @@ export default function LandingPage() {
                 btnBg: 'bg-memphisCoral text-white hover:bg-red-600',
                 priceColor: 'text-memphisCoral',
                 key: 'backend-dev',
+                icon: Terminal,
               },
             ]
               .filter((g) => filterCategory === 'all' || g.category === filterCategory)
-              .map((group) => (
-                <div key={group.key} className="bg-white rounded-3xl memphis-border memphis-shadow-lg overflow-hidden flex flex-col justify-between">
-                  <div>
-                    <div className={`${group.headerBg} p-5 sm:p-6 border-b-[3px] border-ink relative`}>
-                      <span className={`${group.badgeBg} font-bold text-xs px-3 py-1 rounded-full memphis-border absolute top-3 sm:top-4 right-3 sm:right-4`}>
-                        {group.badgeText}
-                      </span>
-                      <div className="text-white font-display font-extrabold text-lg sm:text-2xl pt-6 sm:pt-4">
-                        {group.title}
-                      </div>
-                    </div>
-                    <div className="p-5 sm:p-6 space-y-3 sm:space-y-4">
-                      <p className="text-sm text-ink/70">{group.desc}</p>
-                      <div className="flex flex-wrap gap-1.5 sm:gap-2 text-xs font-bold text-ink">
-                        {group.tags.map((t) => (
-                          <span key={t} className="bg-cream px-2.5 py-1 rounded-lg border border-ink">{t}</span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="px-5 sm:px-6 pb-5 sm:pb-6 border-t border-ink/10 flex items-center justify-between pt-4">
+              .map((group) => {
+                const GroupIcon = group.icon;
+                return (
+                  <div key={group.key} className="bg-white rounded-3xl memphis-border memphis-shadow-lg overflow-hidden flex flex-col justify-between">
                     <div>
-                      <div className="text-xs text-ink/50 line-through">Rp 450.000</div>
-                      <div className={`font-display font-extrabold text-xl sm:text-2xl ${group.priceColor}`}>GRATIS</div>
+                      <div className={`${group.headerBg} p-5 sm:p-6 border-b-[3px] border-ink relative`}>
+                        <span className={`${group.badgeBg} font-bold text-xs px-3 py-1 rounded-full memphis-border absolute top-3 sm:top-4 right-3 sm:right-4`}>
+                          {group.badgeText}
+                        </span>
+                        <div className="text-white font-display font-extrabold text-lg sm:text-2xl pt-6 sm:pt-4 flex items-center gap-2">
+                          <GroupIcon className="w-6 h-6 text-white shrink-0" />
+                          <span>{group.title}</span>
+                        </div>
+                      </div>
+                      <div className="p-5 sm:p-6 space-y-3 sm:space-y-4">
+                        <p className="text-sm text-ink/70">{group.desc}</p>
+                        <div className="flex flex-wrap gap-1.5 sm:gap-2 text-xs font-bold text-ink">
+                          {group.tags.map((t) => (
+                            <span key={t} className="bg-cream px-2.5 py-1 rounded-lg border border-ink">{t}</span>
+                          ))}
+                        </div>
+                      </div>
                     </div>
-                    <button
-                      onClick={() => joinGroup(group.key)}
-                      className={`font-body font-bold text-sm px-4 py-2 rounded-xl memphis-border memphis-shadow-sm transition-colors ${group.btnBg}`}
-                    >
-                      Gabung Grup
-                    </button>
+                    <div className="px-5 sm:px-6 pb-5 sm:pb-6 border-t border-ink/10 flex items-center justify-between pt-4">
+                      <div>
+                        <div className="text-xs text-ink/50 line-through">Rp 450.000</div>
+                        <div className={`font-display font-extrabold text-xl sm:text-2xl ${group.priceColor}`}>GRATIS</div>
+                      </div>
+                      <button
+                        onClick={() => joinGroup(group.key)}
+                        className={`font-body font-bold text-sm px-4 py-2 rounded-xl memphis-border memphis-shadow-sm transition-colors ${group.btnBg} flex items-center gap-1.5`}
+                      >
+                        <span>Gabung Grup</span>
+                        <ExternalLink className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
           </div>
         </div>
       </section>
@@ -667,7 +777,7 @@ export default function LandingPage() {
               💬 TESTIMONI MEMBER KOMUNITAS
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink">
-              Apa kata mereka setelah join <span className="marker-highlight marker-mustard text-ink">Ruang Belajar</span>?
+              Apa kata mereka setelah join <span className="marker-highlight marker-mustard text-ink">Ruang Belajar?</span>
             </h2>
             <p className="font-body text-sm sm:text-base text-ink/70 mt-2">
               Kisah nyata pengalaman belajar & berkembang bersama teman-teman komunitas.
@@ -687,7 +797,7 @@ export default function LandingPage() {
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-1">
                   {[...Array(TESTIMONIALS[currentTestiIndex].rating)].map((_, i) => (
-                    <span key={i} className="text-memphisMustard text-xl sm:text-2xl">★</span>
+                    <Star key={i} className="w-5 h-5 fill-memphisMustard text-memphisMustard" />
                   ))}
                 </div>
                 <span className="bg-white text-ink font-display font-bold text-xs px-3 py-1 rounded-full memphis-border">
@@ -715,8 +825,9 @@ export default function LandingPage() {
                     <div className="text-xs sm:text-sm text-ink/75 font-medium">
                       {TESTIMONIALS[currentTestiIndex].role}
                     </div>
-                    <div className="text-[11px] sm:text-xs text-memphisViolet font-bold">
-                      🎓 {TESTIMONIALS[currentTestiIndex].campus}
+                    <div className="text-[11px] sm:text-xs text-memphisViolet font-bold flex items-center gap-1 mt-0.5">
+                      <GraduationCap className="w-3.5 h-3.5" />
+                      <span>{TESTIMONIALS[currentTestiIndex].campus}</span>
                     </div>
                   </div>
                 </div>
@@ -728,14 +839,14 @@ export default function LandingPage() {
                     aria-label="Previous Testimonial"
                     className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-memphisMustard text-ink font-bold flex items-center justify-center memphis-border memphis-shadow-sm transition-transform active:scale-95"
                   >
-                    ←
+                    <ChevronLeft className="w-5 h-5" />
                   </button>
                   <button
                     onClick={nextTesti}
                     aria-label="Next Testimonial"
                     className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-memphisMustard text-ink font-bold flex items-center justify-center memphis-border memphis-shadow-sm transition-transform active:scale-95"
                   >
-                    →
+                    <ChevronRight className="w-5 h-5" />
                   </button>
                 </div>
               </div>
@@ -765,43 +876,123 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── FOOTER ── */}
-      <footer className="bg-ink text-white border-t-4 border-ink py-10 sm:py-12 relative z-20">
+      {/* ── FINAL CTA SECTION (JOIN COMMUNITY BANNER) ── */}
+      <section className="py-16 sm:py-20 relative z-10 bg-memphisMustard border-t-4 border-ink">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 mb-8">
+          <div className="bg-white rounded-3xl p-8 sm:p-12 md:p-16 memphis-border memphis-shadow-static text-center max-w-4xl mx-auto relative overflow-hidden">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 bg-memphisCoral text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm mb-6">
+              <Rocket className="w-4 h-4" />
+              <span>SIAP UNTUK MULAI BELAJAR?</span>
+            </div>
 
-            {/* Brand */}
-            <div className="sm:col-span-2 lg:col-span-6 space-y-4">
+            {/* Title */}
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink leading-tight mb-4">
+              Tunggu Apa Lagi? Gabung Komunitas <span className="marker-highlight marker-violet text-white px-2">Ruang Belajar</span> Sekarang!
+            </h2>
+
+            {/* Description */}
+            <p className="font-body text-base sm:text-lg text-ink/80 max-w-2xl mx-auto mb-8 leading-relaxed">
+              Dapatkan akses gratis ke seluruh materi, gabung study group terstruktur, dan bangun jaringan koneksi dengan ribuan teman belajar di seluruh Indonesia.
+            </p>
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
+              <Link
+                to={isAuthenticated ? "/dashboard" : "/login"}
+                className="bg-memphisTeal text-white font-body font-bold text-base sm:text-lg px-7 py-3.5 sm:px-8 sm:py-4 rounded-full memphis-border memphis-shadow-lg hover:bg-teal-600 transition-all flex items-center gap-2"
+              >
+                <span>{isAuthenticated ? "Masuk ke Dashboard Saya" : "Daftar Sekarang - 100% Gratis"}</span>
+                <ArrowRight className="w-5 h-5 shrink-0" />
+              </Link>
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Admin%20Ruang%20Belajar,%20saya%20ingin%20gabung%20komunitas"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white text-ink font-body font-bold text-base sm:text-lg px-7 py-3.5 sm:px-8 sm:py-4 rounded-full memphis-border memphis-shadow-lg hover:bg-gray-50 transition-all flex items-center gap-2"
+              >
+                <WhatsAppIcon className="w-5 h-5 text-emerald-600" />
+                <span>Grup WhatsApp</span>
+              </a>
+            </div>
+
+            {/* Trust points */}
+            <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs sm:text-sm font-bold text-ink/75 pt-6 border-t-2 border-ink/10">
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-memphisTeal" />
+                <span>100% Gratis Selamanya</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-memphisCoral" />
+                <span>Lingkungan Suportif</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-memphisViolet" />
+                <span>Studi Kasus & Proyek Nyata</span>
+              </div>
+            </div>
+
+            {/* Decorative background shapes */}
+            <div className="absolute -top-10 -left-10 w-32 h-32 rounded-full bg-memphisTeal/10 pointer-events-none" />
+            <div className="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-memphisCoral/10 pointer-events-none" />
+          </div>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <footer className="bg-ink text-white border-t-4 border-ink py-10 sm:py-14 relative z-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 mb-10">
+
+            {/* Brand & Mission */}
+            <div className="sm:col-span-2 lg:col-span-5 space-y-4">
               <div className="flex items-center gap-3">
                 <img src={logoImg} alt="Logo Footer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl border-2 border-white/50 overflow-hidden" />
                 <span className="font-display font-extrabold text-xl sm:text-2xl text-white">Ruang Belajar</span>
               </div>
-              <p className="text-white/70 max-w-sm text-sm leading-relaxed">
-                Komunitas pembelajaran online Indonesia yang menyediakan lingkungan suportif untuk mengembangkan skill dan pengetahuan bersama.
+              <p className="text-white/75 max-w-sm text-sm leading-relaxed">
+                Komunitas pembelajaran online Indonesia yang menyediakan lingkungan suportif untuk mengembangkan kompetensi bersama.
               </p>
+              {/* Media Sosial Badges */}
+              <div className="pt-2">
+                <div className="text-xs font-bold uppercase tracking-wider text-memphisMustard mb-3">
+                  IKUTI MEDIA SOSIAL KAMI:
+                </div>
+                <div className="flex items-center gap-2.5 flex-wrap">
+                  {SOCIAL_LINKS.map((soc) => {
+                    const SocIcon = soc.icon;
+                    return (
+                      <a
+                        key={soc.name}
+                        href={soc.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={`w-10 h-10 rounded-xl bg-white/10 text-white border border-white/20 flex items-center justify-center transition-all ${soc.color} memphis-shadow-sm transform hover:-translate-y-1`}
+                        aria-label={soc.name}
+                        title={`${soc.name}: ${soc.handle}`}
+                      >
+                        <SocIcon className="w-5 h-5" />
+                      </a>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
 
-            {/* Navigasi */}
-            <div className="lg:col-span-3 space-y-2 text-sm">
-              <div className="font-display font-bold text-memphisMustard uppercase tracking-wider mb-3">Navigasi</div>
-              <div><a href="#tentang" className="text-white/80 hover:text-memphisTeal transition-colors">Tentang Kami</a></div>
-              <div><a href="#fitur" className="text-white/80 hover:text-memphisTeal transition-colors">Aktivitas</a></div>
-              <div><a href="#study-groups" className="text-white/80 hover:text-memphisTeal transition-colors">Study Groups</a></div>
-              <div><a href="#testimoni" className="text-white/80 hover:text-memphisTeal transition-colors">Testimoni</a></div>
-            </div>
-
-            {/* Kontak */}
-            <div className="lg:col-span-3 space-y-2 text-sm">
-              <div className="font-display font-bold text-memphisMustard uppercase tracking-wider mb-3">Kontak & Info</div>
-              <div className="text-white/80">info@ruangbelajar.space</div>
-              <div className="text-white/80">Komunitas 100% Gratis</div>
-              <div className="text-white/80">Indonesia 🇮🇩</div>
+            {/* Navigasi Quick Links */}
+            <div className="lg:col-span-3 space-y-3 text-sm">
+              <div className="font-display font-bold text-memphisMustard uppercase tracking-wider mb-4">Navigasi</div>
+              <div><a href="#tentang" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Tentang Kami</a></div>
+              <div><a href="#fitur" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Aktivitas Komunitas</a></div>
+              <div><a href="#study-groups" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Study Groups</a></div>
+              <div><a href="#testimoni" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Testimoni Member</a></div>
+              <div><Link to="/courses" className="text-memphisSky hover:underline flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5" />Katalog Kursus</Link></div>
             </div>
           </div>
 
           {/* Bottom bar */}
           <div className="border-t border-white/10 pt-6 text-xs text-white/50 flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div>© 2026 Ruang Belajar Komunitas. Hak Cipta Dilindungi.</div>
+            <div>© 2026 Komunitas Ruang Belajar. Hak Cipta Dilindungi.</div>
             <div className="flex gap-4">
               <a href="#" className="text-white/80 hover:text-memphisTeal transition-colors">Syarat & Ketentuan</a>
               <a href="#" className="text-white/80 hover:text-memphisTeal transition-colors">Kebijakan Privasi</a>
@@ -817,13 +1008,14 @@ export default function LandingPage() {
             <button
               onClick={() => setDemoModalOpen(false)}
               className="absolute top-4 right-4 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-memphisCoral text-white font-bold flex items-center justify-center memphis-border"
+              aria-label="Tutup Modal"
             >
-              ✕
+              <X className="w-5 h-5" />
             </button>
             <h3 className="font-display font-bold text-xl sm:text-2xl text-ink mb-4">Preview Pembelajaran Ruang Belajar</h3>
-            <div className="aspect-video bg-ink rounded-2xl flex flex-col items-center justify-center text-white p-6 memphis-border">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-memphisMustard text-ink flex items-center justify-center font-extrabold text-xl mb-4 cursor-pointer hover:scale-110 transition-transform">
-                ▶
+            <div className="aspect-video bg-ink rounded-2xl flex flex-col items-center justify-center text-white p-6 memphis-border relative group">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-memphisMustard text-ink flex items-center justify-center font-extrabold text-xl mb-4 cursor-pointer hover:scale-110 transition-transform shadow-lg">
+                <Play className="w-7 h-7 fill-ink ml-1" />
               </div>
               <p className="font-body text-center font-medium text-sm sm:text-base">Klik untuk memutar video simulasi kelas interaktif</p>
             </div>
