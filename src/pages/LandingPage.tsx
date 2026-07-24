@@ -940,62 +940,76 @@ export default function LandingPage() {
       </section>
 
       {/* ── FOOTER ── */}
-      <footer className="bg-ink text-white border-t-4 border-ink py-10 sm:py-14 relative z-20">
+      <footer className="bg-ink text-white border-t-4 border-ink py-10 sm:py-16 relative z-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 mb-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-12 mb-12">
 
-            {/* Brand & Mission */}
-            <div className="sm:col-span-2 lg:col-span-5 space-y-4">
+            {/* Column 1: Brand & Mission */}
+            <div className="lg:col-span-5 space-y-4">
               <div className="flex items-center gap-3">
-                <img src={logoImg} alt="Logo Footer" className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl border-2 border-white/50 overflow-hidden" />
-                <span className="font-display font-extrabold text-xl sm:text-2xl text-white">Ruang Belajar</span>
+                <img src={logoImg} alt="Logo Footer" className="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl border-2 border-white/50 overflow-hidden shadow-sm" />
+                <span className="font-display font-extrabold text-2xl sm:text-3xl text-white">Ruang Belajar</span>
               </div>
-              <p className="text-white/75 max-w-sm text-sm leading-relaxed">
-                Komunitas pembelajaran online Indonesia yang menyediakan lingkungan suportif untuk mengembangkan kompetensi bersama.
+              <p className="text-white/75 text-sm sm:text-base leading-relaxed max-w-md">
+                Komunitas pembelajaran online Indonesia yang menyediakan lingkungan suportif untuk mengembangkan kompetensi IT, Desain, dan Digital bersama.
               </p>
-              {/* Media Sosial Badges */}
-              <div className="pt-2">
-                <div className="text-xs font-bold uppercase tracking-wider text-memphisMustard mb-3">
-                  IKUTI MEDIA SOSIAL KAMI:
-                </div>
-                <div className="flex items-center gap-2.5 flex-wrap">
-                  {SOCIAL_LINKS.map((soc) => {
-                    const SocIcon = soc.icon;
-                    return (
-                      <a
-                        key={soc.name}
-                        href={soc.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className={`w-10 h-10 rounded-xl bg-white/10 text-white border border-white/20 flex items-center justify-center transition-all ${soc.color} memphis-shadow-sm transform hover:-translate-y-1`}
-                        aria-label={soc.name}
-                        title={`${soc.name}: ${soc.handle}`}
-                      >
-                        <SocIcon className="w-5 h-5" />
-                      </a>
-                    );
-                  })}
-                </div>
+              <div className="inline-flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-full border border-white/20 text-xs text-memphisMustard font-bold">
+                <span>🇮🇩 100% Gratis & Inklusif</span>
               </div>
             </div>
 
-            {/* Navigasi Quick Links */}
-            <div className="lg:col-span-3 space-y-3 text-sm">
-              <div className="font-display font-bold text-memphisMustard uppercase tracking-wider mb-4">Navigasi</div>
-              <div><a href="#tentang" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Tentang Kami</a></div>
-              <div><a href="#fitur" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Aktivitas Komunitas</a></div>
-              <div><a href="#study-groups" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Study Groups</a></div>
-              <div><a href="#testimoni" className="text-white/80 hover:text-memphisTeal transition-colors flex items-center gap-1.5"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Testimoni Member</a></div>
-              <div><Link to="/courses" className="text-memphisSky hover:underline flex items-center gap-1.5"><BookOpen className="w-3.5 h-3.5" />Katalog Kursus</Link></div>
+            {/* Column 2: Navigasi Menu */}
+            <div className="lg:col-span-3 space-y-3">
+              <div className="font-display font-extrabold text-memphisMustard text-xs sm:text-sm uppercase tracking-widest mb-4">
+                NAVIGASI WEBSITE
+              </div>
+              <ul className="space-y-2.5 text-sm">
+                <li><a href="#tentang" className="text-white/80 hover:text-memphisTeal transition-colors inline-flex items-center gap-2 font-medium"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Tentang Kami</a></li>
+                <li><a href="#fitur" className="text-white/80 hover:text-memphisTeal transition-colors inline-flex items-center gap-2 font-medium"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Aktivitas Komunitas</a></li>
+                <li><a href="#study-groups" className="text-white/80 hover:text-memphisTeal transition-colors inline-flex items-center gap-2 font-medium"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Study Groups</a></li>
+                <li><a href="#testimoni" className="text-white/80 hover:text-memphisTeal transition-colors inline-flex items-center gap-2 font-medium"><ArrowRight className="w-3.5 h-3.5 text-memphisMustard" />Testimoni Member</a></li>
+                <li><Link to="/courses" className="text-memphisSky hover:underline inline-flex items-center gap-2 font-bold"><BookOpen className="w-3.5 h-3.5" />Katalog Kursus</Link></li>
+              </ul>
             </div>
+
+            {/* Column 3: Media Sosial & Komunitas */}
+            <div className="lg:col-span-4 space-y-4">
+              <div className="font-display font-extrabold text-memphisMustard text-xs sm:text-sm uppercase tracking-widest mb-4">
+                MEDIA SOSIAL & RESMI
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2.5">
+                {SOCIAL_LINKS.map((soc) => {
+                  const SocIcon = soc.icon;
+                  return (
+                    <a
+                      key={soc.name}
+                      href={soc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`flex items-center gap-3 p-2.5 rounded-xl bg-white/10 hover:bg-white text-white hover:text-ink border border-white/20 transition-all duration-300 group memphis-shadow-sm`}
+                    >
+                      <div className={`w-8 h-8 rounded-lg bg-white/10 group-hover:bg-ink group-hover:text-white flex items-center justify-center transition-colors shrink-0`}>
+                        <SocIcon className="w-4 h-4" />
+                      </div>
+                      <div className="overflow-hidden text-left">
+                        <div className="font-display font-bold text-xs group-hover:text-ink">{soc.name}</div>
+                        <div className="text-[11px] opacity-70 group-hover:opacity-100 truncate">{soc.handle}</div>
+                      </div>
+                    </a>
+                  );
+                })}
+              </div>
+            </div>
+
           </div>
 
-          {/* Bottom bar */}
-          <div className="border-t border-white/10 pt-6 text-xs text-white/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+          {/* Bottom Bar: Copyright & Terms */}
+          <div className="border-t border-white/10 pt-6 text-xs text-white/60 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
             <div>© 2026 Komunitas Ruang Belajar. Hak Cipta Dilindungi.</div>
-            <div className="flex gap-4">
-              <a href="#" className="text-white/80 hover:text-memphisTeal transition-colors">Syarat & Ketentuan</a>
-              <a href="#" className="text-white/80 hover:text-memphisTeal transition-colors">Kebijakan Privasi</a>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 font-medium">
+              <a href="#" className="hover:text-memphisTeal transition-colors">Syarat & Ketentuan</a>
+              <a href="#" className="hover:text-memphisTeal transition-colors">Kebijakan Privasi</a>
+              <a href="mailto:info@ruangbelajar.space" className="hover:text-memphisTeal transition-colors">Kontak Email</a>
             </div>
           </div>
         </div>
