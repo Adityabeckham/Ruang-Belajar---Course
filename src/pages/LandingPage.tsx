@@ -20,8 +20,8 @@ const CAMPUS_PARTNERS = [
   { name: 'Universitas Teknologi Bandung', logo: utb, alt: 'UTB Bandung', shortName: 'UTB Bandung' },
   { name: 'Politeknik Negeri Subang', logo: polsub, alt: 'POLSUB', shortName: 'POLSUB Subang' },
   { name: 'STMIK Mardira Indonesia', logo: mardira, alt: 'STMIK Mardira', shortName: 'STMIK Mardira' },
-  { name: 'Universitas Harapan Bangsa', logo: UHS, alt: 'UHS', shortName: 'UHS Purwokerto' },
-  { name: 'STT Terpadu Nurul Fikri', logo: sttnf, alt: 'STT NF', shortName: 'STT Nurul Fikri' },
+  { name: 'Universitas Harapan Bangsa', logo: UHS, alt: 'UHS', shortName: 'UHS Bandung' },
+  { name: 'STT Terpadu Nurul Fikri', logo: sttnf, alt: 'STT NF', shortName: 'STT NF Depok' },
 ];
 
 const TENTANG_PILLARS = [
@@ -55,7 +55,7 @@ const TESTIMONIALS = [
     img: oparImg,
     name: 'Opar Yusuf',
     role: 'Graphic Designer & UI Contributor',
-    campus: 'UTB Bandung',
+    campus: 'Umum',
     rating: 5,
     tag: 'Design & Code',
   },
@@ -65,7 +65,7 @@ const TESTIMONIALS = [
     img: adityaImg,
     name: 'Aditya Beckham',
     role: 'Web Developer Intern at Mahreen Indonesia',
-    campus: 'Politeknik Negeri Subang',
+    campus: 'Universitas Teknologi Bandung',
     rating: 5,
     tag: 'Web Development',
   },
@@ -74,20 +74,10 @@ const TESTIMONIALS = [
     quote: 'Ruang belajar ini seperti light mode di tengah kebingungan, tenang, fokus, dan nyaman untuk belajar IT. Pembahasannya runtut dan ruang diskusinya sangat suportif untuk mahasiswa yang ingin memperdalam skill praktis.',
     img: reishanImg,
     name: 'Muhammad Reishan Asvialdy',
-    role: 'Mahasiswa Computer Science',
+    role: 'Mahasiswa Teknik Informatika',
     campus: 'Universitas Teknologi Bandung',
     rating: 5,
-    tag: 'Computer Science',
-  },
-  {
-    id: 4,
-    quote: 'Materi terstruktur dan latihan prakteknya langsung kepake buat nugas kuliah dan bikin portofolio. Komunitasnya responsif banget kalau kita stuck di bug error!',
-    img: oparImg,
-    name: 'Siti Rahmawati',
-    role: 'Frontend Learning Member',
-    campus: 'STT Terpadu Nurul Fikri',
-    rating: 5,
-    tag: 'Frontend Dev',
+    tag: 'Teknik Informatika',
   },
 ];
 
@@ -243,7 +233,7 @@ export default function LandingPage() {
             <a href="#fitur" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Aktivitas</a>
             <a href="#study-groups" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Study Groups</a>
             <a href="#testimoni" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Testimoni</a>
-            <Link to="/courses" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-memphisViolet hover:bg-memphisViolet/10 transition-colors">Katalog Kursus 🚀</Link>
+            <Link to="/courses" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-memphisViolet hover:bg-memphisViolet/10 transition-colors">Katalog Kursus</Link>
             <div className="flex gap-3 pt-2">
               {isAuthenticated ? (
                 <Link to="/dashboard" className="flex-1 text-center bg-memphisTeal text-white font-body font-bold text-sm py-2.5 rounded-full memphis-border">Dashboard Saya</Link>
@@ -267,7 +257,7 @@ export default function LandingPage() {
             {/* Eyebrow pill */}
             <div className="inline-flex items-center gap-2 bg-memphisViolet text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-memphisMustard animate-pulse" />
-              <span>💡 LEARN TOGETHER, GROW TOGETHER</span>
+              <span>💡 KOMUNITAS BELAJAR INDONESIA</span>
             </div>
 
             {/* H1 */}
@@ -302,11 +292,11 @@ export default function LandingPage() {
 
             {/* Trust badges */}
             <div className="pt-5 flex items-center gap-4 border-t-2 border-ink/10">
-              <div className="flex -space-x-3">
+              <div className="flex -space-x-1">
                 {[
                   { bg: 'bg-memphisCoral', label: '100%' },
-                  { bg: 'bg-memphisTeal', label: 'IT' },
-                  { bg: 'bg-memphisViolet', label: 'UI' },
+                  { bg: 'bg-memphisTeal', label: 'Gratis' },
+                  { bg: 'bg-memphisViolet', label: 'Seru' },
                 ].map((item, idx) => (
                   <div key={idx} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${item.bg} text-white font-bold text-xs flex items-center justify-center border-2 border-ink memphis-shadow-sm`}>
                     {item.label}
@@ -427,7 +417,7 @@ export default function LandingPage() {
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight text-ink">
               Wadah Belajar Inklusif & Gratis untuk{' '}
-              <span className="marker-highlight marker-coral text-white px-2">Generasi Digital</span>
+              <span className="marker-highlight marker-mustard text-ink">Generasi Digital</span>
             </h2>
             <p className="font-body text-base sm:text-lg text-ink/75 mt-4 leading-relaxed">
               Ruang Belajar adalah komunitas pembelajaran digital independen Indonesia yang didirikan untuk menjembatani generasi muda dengan kebutuhan teknologi modern melalui ekosistem belajar yang terstruktur, positif, dan 100% tanpa biaya.
@@ -567,7 +557,7 @@ export default function LandingPage() {
                 STUDY GROUPS AKTIF
               </div>
               <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink">
-                Temukan Study Group Favoritmu
+                Temukan Study Group<span className="marker-highlight marker-mustard text-ink">Favoritmu</span>
               </h2>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -677,7 +667,7 @@ export default function LandingPage() {
               💬 TESTIMONI MEMBER KOMUNITAS
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink">
-              Apa kata mereka setelah join Ruang Belajar?
+              Apa kata mereka setelah join <span className="marker-highlight marker-mustard text-ink">Ruang Belajar</span>?
             </h2>
             <p className="font-body text-sm sm:text-base text-ink/70 mt-2">
               Kisah nyata pengalaman belajar & berkembang bersama teman-teman komunitas.
