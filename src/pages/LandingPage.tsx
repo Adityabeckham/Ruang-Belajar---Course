@@ -888,7 +888,7 @@ export default function LandingPage() {
 
             {/* Title */}
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink leading-tight mb-4">
-              Tunggu Apa Lagi? Gabung Komunitas <span className="marker-highlight marker-violet text-white px-2">Ruang Belajar</span> Sekarang!
+              Tunggu Apa Lagi? Gabung Komunitas Ruang Belajar <span className="marker-highlight marker-mustard text-ink">Sekarang!</span>
             </h2>
 
             {/* Description */}
