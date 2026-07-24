@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useConvexAuth } from 'convex/react';
 import { useFirebaseAuth } from '@/hooks/useFirebaseAuth';
@@ -10,86 +10,7 @@ import utb from '../assets/images/utb.png';
 import polsub from '../assets/images/polsub.png';
 import mardira from '../assets/images/mardira.png';
 import UHS from '../assets/images/UHS.webp';
-import sttnf from '../assets/images/sttnf.png';
 
-// ─────────────────────────────────────────────────────────────
-// DATA STRUCTURES (Scalable & Maintainable Architecture)
-// ─────────────────────────────────────────────────────────────
-
-const CAMPUS_PARTNERS = [
-  { name: 'Universitas Teknologi Bandung', logo: utb, alt: 'UTB Bandung', shortName: 'UTB Bandung' },
-  { name: 'Politeknik Negeri Subang', logo: polsub, alt: 'POLSUB', shortName: 'POLSUB Subang' },
-  { name: 'STMIK Mardira Indonesia', logo: mardira, alt: 'STMIK Mardira', shortName: 'STMIK Mardira' },
-  { name: 'Universitas Harapan Bangsa', logo: UHS, alt: 'UHS', shortName: 'UHS Purwokerto' },
-  { name: 'STT Terpadu Nurul Fikri', logo: sttnf, alt: 'STT NF', shortName: 'STT Nurul Fikri' },
-];
-
-const TENTANG_PILLARS = [
-  {
-    bg: 'bg-memphisCoral',
-    badge: 'VISI UTAMA',
-    title: 'Ekosistem Belajar Inklusif',
-    desc: 'Menciptakan wadah pembelajaran IT & Kreatif gratis yang dapat diakses oleh siapapun di Indonesia tanpa hambatan finansial atau latar belakang.',
-    icon: '🎯',
-  },
-  {
-    bg: 'bg-memphisTeal',
-    badge: 'MISI KOMUNITAS',
-    title: 'Praktis & Siap Kerja',
-    desc: 'Fokus pada studi kasus nyata, pengerjaan proyek portofolio, dan bimbingan langsung dari praktisi industri yang berpengalaman.',
-    icon: '🚀',
-  },
-  {
-    bg: 'bg-memphisViolet',
-    badge: 'NILAI UTAMA',
-    title: 'Kolaborasi & Suportif',
-    desc: 'Mengutamakan budaya saling bantu, belajar bersama tanpa judging, dan lingkungan komunitas yang aman, positif, serta menyenangkan.',
-    icon: '🤝',
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    id: 1,
-    quote: 'Sebagai desainer grafis, awalnya saya nggak yakin bisa belajar coding. Tapi setelah gabung di Ruang Belajar, saya jadi ngerti banyak hal! Kursusnya jelas dan mudah dipahami. Sekarang saya bisa bikin website sederhana sendiri. Komunitasnya juga asyik banget buat nanya-nanya!',
-    img: oparImg,
-    name: 'Opar Yusuf',
-    role: 'Graphic Designer & UI Contributor',
-    campus: 'UTB Bandung',
-    rating: 5,
-    tag: 'Design & Code',
-  },
-  {
-    id: 2,
-    quote: 'Awalnya aku bener-bener nggak ngerti apa-apa soal coding, tapi setelah ikut Ruang Belajar, semuanya jadi lebih jelas. Mulai dari HTML, CSS, sampai sekarang udah nyampe ke JavaScript! Materinya gampang dicerna, mentornya asik dan nggak pelit ilmu. Plus, ini gratis! Worth it buat yang pengen jadi web developer dari nol.',
-    img: adityaImg,
-    name: 'Aditya Beckham',
-    role: 'Web Developer Intern at Mahreen Indonesia',
-    campus: 'Politeknik Negeri Subang',
-    rating: 5,
-    tag: 'Web Development',
-  },
-  {
-    id: 3,
-    quote: 'Ruang belajar ini seperti light mode di tengah kebingungan, tenang, fokus, dan nyaman untuk belajar IT. Pembahasannya runtut dan ruang diskusinya sangat suportif untuk mahasiswa yang ingin memperdalam skill praktis.',
-    img: reishanImg,
-    name: 'Muhammad Reishan Asvialdy',
-    role: 'Mahasiswa Computer Science',
-    campus: 'Universitas Teknologi Bandung',
-    rating: 5,
-    tag: 'Computer Science',
-  },
-  {
-    id: 4,
-    quote: 'Materi terstruktur dan latihan prakteknya langsung kepake buat nugas kuliah dan bikin portofolio. Komunitasnya responsif banget kalau kita stuck di bug error!',
-    img: oparImg,
-    name: 'Siti Rahmawati',
-    role: 'Frontend Learning Member',
-    campus: 'STT Terpadu Nurul Fikri',
-    rating: 5,
-    tag: 'Frontend Dev',
-  },
-];
 
 export default function LandingPage() {
   const { isAuthenticated: convexAuth } = useConvexAuth();
@@ -100,31 +21,9 @@ export default function LandingPage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
 
-  // Testimonial Carousel State (Scalable & Horizontal Auto-sliding)
-  const [currentTestiIndex, setCurrentTestiIndex] = useState(0);
-  const [isAutoPlay, setIsAutoPlay] = useState(true);
-
-  useEffect(() => {
-    if (!isAutoPlay) return;
-    const interval = setInterval(() => {
-      setCurrentTestiIndex((prev) => (prev + 1) % TESTIMONIALS.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [isAutoPlay]);
-
   const joinGroup = (groupName: string) => {
     const msg = `Halo Admin Ruang Belajar, saya berminat untuk gabung study group: ${groupName}`;
-    window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`, '_blank', 'noopener,noreferrer');
-  };
-
-  const nextTesti = () => {
-    setIsAutoPlay(false);
-    setCurrentTestiIndex((prev) => (prev + 1) % TESTIMONIALS.length);
-  };
-
-  const prevTesti = () => {
-    setIsAutoPlay(false);
-    setCurrentTestiIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+    window.open(`https://wa.me/6281234567890?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   return (
@@ -170,22 +69,17 @@ export default function LandingPage() {
 
             {/* Logo */}
             <a href="#" className="flex items-center gap-2.5 shrink-0">
-              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl border-2 border-white/50 overflow-hidden shadow-sm">
-                <img src={logoImg} alt="Logo Ruang Belajar" className="object-cover w-full h-full" />
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl border-2 border-white/50 overflow-hidden">
+                <img src={logoImg} alt="Logo Ruang Belajar" className="object-cover w-full h-full " />
               </div>
               <span className="font-display font-extrabold text-lg sm:text-2xl tracking-tight text-ink">Ruang Belajar</span>
             </a>
 
             {/* Desktop Nav Links */}
             <div className="hidden md:flex items-center gap-6 lg:gap-8">
-              <a href="#tentang" className="font-body font-bold text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Tentang</a>
-              <a href="#fitur" className="font-body font-bold text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Aktivitas</a>
-              <a href="#study-groups" className="font-body font-bold text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Study Groups</a>
-              <a href="#testimoni" className="font-body font-bold text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Testimoni</a>
-              <Link to="/courses" className="font-body font-bold text-memphisViolet hover:text-indigo-700 transition-colors text-sm lg:text-base flex items-center gap-1">
-                <span>Katalog Kursus</span>
-                <span className="text-xs bg-memphisMustard text-ink px-1.5 py-0.5 rounded border border-ink">NEW</span>
-              </Link>
+              <a href="#fitur" className="font-body font-medium text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Aktivitas</a>
+              <a href="#study-groups" className="font-body font-medium text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Study Groups</a>
+              <a href="#testimoni" className="font-body font-medium text-ink hover:text-memphisCoral transition-colors text-sm lg:text-base">Testimoni</a>
             </div>
 
             {/* Desktop CTA + Mobile Hamburger */}
@@ -224,7 +118,7 @@ export default function LandingPage() {
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="md:hidden p-2 rounded-xl memphis-border bg-white hover:bg-cream transition-colors"
-                aria-label="Toggle Navigation Menu"
+                aria-label="Menu"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                   {mobileMenuOpen
@@ -239,11 +133,9 @@ export default function LandingPage() {
         {/* Mobile Dropdown Menu */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t-2 border-ink/10 bg-cream/98 backdrop-blur-sm px-4 pb-4 pt-2 space-y-1">
-            <a href="#tentang" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Tentang</a>
-            <a href="#fitur" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Aktivitas</a>
-            <a href="#study-groups" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Study Groups</a>
-            <a href="#testimoni" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-ink hover:bg-memphisMustard/20 transition-colors">Testimoni</a>
-            <Link to="/courses" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-bold text-memphisViolet hover:bg-memphisViolet/10 transition-colors">Katalog Kursus 🚀</Link>
+            <a href="#fitur" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-medium text-ink hover:bg-memphisMustard/20 transition-colors">Aktivitas</a>
+            <a href="#study-groups" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-medium text-ink hover:bg-memphisMustard/20 transition-colors">Study Groups</a>
+            <a href="#testimoni" onClick={() => setMobileMenuOpen(false)} className="block px-4 py-3 rounded-xl font-body font-medium text-ink hover:bg-memphisMustard/20 transition-colors">Testimoni</a>
             <div className="flex gap-3 pt-2">
               {isAuthenticated ? (
                 <Link to="/dashboard" className="flex-1 text-center bg-memphisTeal text-white font-body font-bold text-sm py-2.5 rounded-full memphis-border">Dashboard Saya</Link>
@@ -259,7 +151,7 @@ export default function LandingPage() {
       </header>
 
       {/* ── HERO SECTION ── */}
-      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-14 md:pt-16 md:pb-20">
+      <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-16 md:pt-16 md:pb-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
 
           {/* Left: Copy */}
@@ -267,7 +159,7 @@ export default function LandingPage() {
             {/* Eyebrow pill */}
             <div className="inline-flex items-center gap-2 bg-memphisViolet text-white text-xs sm:text-sm font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm">
               <span className="w-2.5 h-2.5 rounded-full bg-memphisMustard animate-pulse" />
-              <span>💡 LEARN TOGETHER, GROW TOGETHER</span>
+              <span>💡 KOMUNITAS BELAJAR INDONESIA</span>
             </div>
 
             {/* H1 */}
@@ -305,11 +197,11 @@ export default function LandingPage() {
               <div className="flex -space-x-3">
                 {[
                   { bg: 'bg-memphisCoral', label: '100%' },
-                  { bg: 'bg-memphisTeal', label: 'IT' },
-                  { bg: 'bg-memphisViolet', label: 'UI' },
-                ].map((item, idx) => (
-                  <div key={idx} className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full ${item.bg} text-white font-bold text-xs flex items-center justify-center border-2 border-ink memphis-shadow-sm`}>
-                    {item.label}
+                  { bg: 'bg-memphisTeal', label: 'Aktif' },
+                  { bg: 'bg-memphisViolet', label: 'Support' },
+                ].map((b) => (
+                  <div key={b.label} className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${b.bg} text-white font-bold flex items-center justify-center memphis-border text-[10px] sm:text-xs`}>
+                    {b.label}
                   </div>
                 ))}
               </div>
@@ -320,177 +212,84 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Right: Interactive Memphis Card */}
-          <div className="lg:col-span-5 relative">
-            <div className="bg-white rounded-3xl p-5 sm:p-7 memphis-border memphis-shadow-lg relative overflow-hidden">
-              <div className="flex items-center justify-between mb-4">
-                <span className="bg-memphisMustard text-ink text-xs font-bold px-3 py-1 rounded-full memphis-border uppercase tracking-wider">
-                  STUDY GROUP HIGHLIGHT
-                </span>
-                <span className="text-xs text-ink/60 font-bold">Terbaru 2026</span>
-              </div>
-
-              <h3 className="font-display font-extrabold text-2xl sm:text-3xl text-ink mb-2">
-                Frontend Web Dev
-              </h3>
-              <p className="font-body text-sm text-ink/75 mb-4">
-                HTML5, CSS3, Tailwind v4 & React 19. Dari nol sampai bisa bikin portofolio sendiri!
-              </p>
-
-              {/* Progress card */}
-              <div className="bg-cream rounded-xl p-3 sm:p-4 memphis-border mb-4 sm:mb-5">
-                <div className="text-[10px] sm:text-xs font-bold mb-2 sm:mb-3 text-ink">Aktivitas Belajar (Menit)</div>
-                <div className="flex items-end justify-between h-24 sm:h-28 gap-1.5 sm:gap-2 px-1 sm:px-2">
-                  {[
-                    { bg: 'bg-memphisMustard', h: '45%', label: 'Senin' },
-                    { bg: 'bg-memphisCoral', h: '65%', label: 'Selasa' },
-                    { bg: 'bg-memphisViolet', h: '50%', label: 'Rabu' },
-                    { bg: 'bg-memphisTeal', h: '85%', label: 'Kamis' },
-                    { bg: 'bg-memphisSky', h: '70%', label: 'Jumat' },
-                    { bg: 'bg-memphisCoral', h: '95%', label: 'Sabtu' },
-                  ].map((bar) => (
-                    <div key={bar.label} className={`w-full ${bar.bg} rounded-t-lg memphis-border`} style={{ height: bar.h }} title={bar.label} />
-                  ))}
+          {/* Right: Dashboard Card */}
+          <div className="lg:col-span-5 relative mt-4 lg:mt-0">
+            <div className="transform -rotate-2 hover:rotate-0 transition-transform duration-300 cursor-default">
+              <div className="bg-white rounded-3xl memphis-border memphis-shadow-static p-4 sm:p-6 relative overflow-hidden">
+                {/* Chrome bar */}
+                <div className="flex items-center justify-between pb-4 mb-4 border-b-2 border-ink/10">
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-memphisCoral memphis-border" />
+                    <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-memphisMustard memphis-border" />
+                    <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full bg-memphisTeal memphis-border" />
+                  </div>
+                  <div className="bg-cream font-body text-[10px] sm:text-xs font-bold px-2.5 sm:px-3 py-1 rounded-full memphis-border truncate max-w-[150px] sm:max-w-none">
+                    Dashboard Belajar - Ruang Belajar
+                  </div>
                 </div>
-                <div className="flex justify-between text-[9px] sm:text-[10px] font-bold mt-1.5 sm:mt-2 text-ink/70 px-0.5 sm:px-1">
-                  <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
-                </div>
-              </div>
 
-              {/* Action buttons inside card */}
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => setDemoModalOpen(true)}
-                  className="flex-1 bg-memphisViolet text-white font-body font-bold text-xs sm:text-sm py-2.5 sm:py-3 rounded-xl memphis-border memphis-shadow-sm hover:bg-indigo-700 transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <span>▶ Tonton Demo Kelas</span>
-                </button>
-                <Link
-                  to="/courses"
-                  className="bg-white text-ink font-body font-bold text-xs sm:text-sm px-4 py-2.5 sm:py-3 rounded-xl memphis-border hover:bg-gray-100 transition-colors"
-                >
-                  Katalog
-                </Link>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ── LOGO STRIP (KAMPUS & ASOSIASI MEMBER) - RESPONSIVE & ELEGANT ── */}
-      <section className="bg-ink text-white py-6 sm:py-8 border-y-4 border-ink relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
-
-            {/* Label */}
-            <div className="flex items-center gap-2 shrink-0">
-              <span className="w-3 h-3 rounded-full bg-memphisMustard animate-ping" />
-              <div className="font-display font-extrabold text-memphisMustard text-xs sm:text-sm tracking-widest uppercase text-center md:text-left">
-                KAMPUS & ASOSIASI MEMBER:
-              </div>
-            </div>
-
-            {/* Responsive Logo Container Grid / Flex */}
-            <div className="flex flex-wrap items-center justify-center md:justify-end gap-3 sm:gap-4 md:gap-6 w-full">
-              {CAMPUS_PARTNERS.map((partner) => (
-                <div
-                  key={partner.alt}
-                  className="group bg-white/95 hover:bg-white px-3 sm:px-4 py-2 rounded-2xl border-2 border-white/20 hover:border-memphisMustard transition-all duration-300 transform hover:-translate-y-1 flex items-center gap-2.5 shadow-md"
-                  title={partner.name}
-                >
-                  <img
-                    src={partner.logo}
-                    alt={partner.alt}
-                    className="h-8 sm:h-10 w-auto max-w-[80px] sm:max-w-[100px] object-contain transition-transform group-hover:scale-105"
-                    loading="lazy"
-                  />
-                  <span className="font-display font-bold text-ink text-xs sm:text-sm hidden lg:inline-block">
-                    {partner.shortName}
+                {/* Progres header */}
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="font-display font-bold text-base sm:text-lg text-ink">Progres Mingguan</div>
+                    <div className="text-[10px] sm:text-xs text-ink/60">3 dari 5 modul diselesaikan</div>
+                  </div>
+                  <span className="bg-memphisTeal text-white text-[10px] sm:text-xs font-bold px-2 sm:px-2.5 py-1 rounded-full memphis-border shrink-0">
+                    +85% Konsistensi
                   </span>
                 </div>
-              ))}
-            </div>
 
+                {/* Bar chart */}
+                <div className="bg-cream rounded-xl p-3 sm:p-4 memphis-border mb-4 sm:mb-5">
+                  <div className="text-[10px] sm:text-xs font-bold mb-2 sm:mb-3 text-ink">Aktivitas Belajar (Menit)</div>
+                  <div className="flex items-end justify-between h-24 sm:h-28 gap-1.5 sm:gap-2 px-1 sm:px-2">
+                    {[
+                      { bg: 'bg-memphisMustard', h: '45%', label: 'Senin' },
+                      { bg: 'bg-memphisCoral', h: '65%', label: 'Selasa' },
+                      { bg: 'bg-memphisViolet', h: '50%', label: 'Rabu' },
+                      { bg: 'bg-memphisTeal', h: '85%', label: 'Kamis' },
+                      { bg: 'bg-memphisSky', h: '70%', label: 'Jumat' },
+                      { bg: 'bg-memphisCoral', h: '95%', label: 'Sabtu' },
+                    ].map((bar) => (
+                      <div key={bar.label} className={`w-full ${bar.bg} rounded-t-lg memphis-border`} style={{ height: bar.h }} title={bar.label} />
+                    ))}
+                  </div>
+                  <div className="flex justify-between text-[9px] sm:text-[10px] font-bold mt-1.5 sm:mt-2 text-ink/70 px-0.5 sm:px-1">
+                    <span>Sen</span><span>Sel</span><span>Rab</span><span>Kam</span><span>Jum</span><span>Sab</span>
+                  </div>
+                </div>
+
+                {/* Checklist */}
+                <div className="space-y-2 sm:space-y-2.5">
+                  <div className="flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 bg-emerald-50 rounded-xl memphis-border">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-memphisTeal text-white flex items-center justify-center memphis-border text-[10px] sm:text-xs font-bold shrink-0">✓</div>
+                    <span className="font-body text-[11px] sm:text-sm font-bold text-ink line-through">Dasar Pemrograman Web & HTML5</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 bg-emerald-50 rounded-xl memphis-border">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-memphisTeal text-white flex items-center justify-center memphis-border text-[10px] sm:text-xs font-bold shrink-0">✓</div>
+                    <span className="font-body text-[11px] sm:text-sm font-bold text-ink line-through">Styling Praktis dengan Tailwind CSS</span>
+                  </div>
+                  <div className="flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 bg-amber-50 rounded-xl memphis-border">
+                    <div className="w-4 h-4 sm:w-5 sm:h-5 rounded bg-white border-2 border-ink shrink-0" />
+                    <span className="font-body text-[11px] sm:text-sm font-bold text-ink">Integrasi Google Sheets & Apps Script</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </section>
 
-      {/* ── SECTION TENTANG RUANG BELAJAR (INSPIRASI RUANGBELAJAR.SPACE) ── */}
-      <section id="tentang" className="py-16 sm:py-24 relative z-10 bg-white border-b-4 border-ink">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16">
-            <div className="inline-block bg-memphisMustard text-ink text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm mb-4">
-              💡 TENTANG RUANG BELAJAR
-            </div>
-            <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight text-ink">
-              Wadah Belajar Inklusif & Gratis untuk{' '}
-              <span className="marker-highlight marker-coral text-white px-2">Generasi Digital</span>
-            </h2>
-            <p className="font-body text-base sm:text-lg text-ink/75 mt-4 leading-relaxed">
-              Ruang Belajar adalah komunitas pembelajaran digital independen Indonesia yang didirikan untuk menjembatani generasi muda dengan kebutuhan teknologi modern melalui ekosistem belajar yang terstruktur, positif, dan 100% tanpa biaya.
-            </p>
+      {/* ── LOGO STRIP ── */}
+      <section className="bg-ink text-white py-5 sm:py-6 border-y-4 border-ink relative z-10 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
+          <div className="font-display font-extrabold text-memphisMustard text-xs sm:text-sm tracking-widest uppercase text-center sm:text-left shrink-0">
+            KAMPUS & ASOSIASI MEMBER:
           </div>
-
-          {/* 3 Pillar Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 mb-14">
-            {TENTANG_PILLARS.map((pillar) => (
-              <div
-                key={pillar.title}
-                className="bg-cream rounded-3xl p-6 sm:p-8 memphis-border memphis-shadow-lg hover:-translate-y-1.5 transition-transform flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-5">
-                    <span className={`w-12 h-12 rounded-2xl ${pillar.bg} text-white text-2xl flex items-center justify-center memphis-border`}>
-                      {pillar.icon}
-                    </span>
-                    <span className="font-display font-extrabold text-xs px-3 py-1 bg-white text-ink rounded-full memphis-border">
-                      {pillar.badge}
-                    </span>
-                  </div>
-                  <h3 className="font-display font-extrabold text-xl sm:text-2xl text-ink mb-3">
-                    {pillar.title}
-                  </h3>
-                  <p className="font-body text-sm sm:text-base text-ink/80 leading-relaxed">
-                    {pillar.desc}
-                  </p>
-                </div>
-              </div>
-            ))}
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 md:gap-12 opacity-80 font-display font-bold text-sm sm:text-base md:text-xl">
+            <img src={utb} alt="UTB" className="w-20 h-20" />
           </div>
-
-          {/* Impact & Key Statistics Banner */}
-          <div className="bg-ink text-white rounded-3xl p-6 sm:p-10 memphis-border memphis-shadow-static relative overflow-hidden">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 text-center relative z-10">
-              <div className="p-3">
-                <div className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-memphisMustard mb-1">
-                  1.500+
-                </div>
-                <div className="font-body font-bold text-xs sm:text-sm text-white/80">Member Komunitas</div>
-              </div>
-              <div className="p-3">
-                <div className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-memphisCoral mb-1">
-                  100%
-                </div>
-                <div className="font-body font-bold text-xs sm:text-sm text-white/80">Gratis Selamanya</div>
-              </div>
-              <div className="p-3">
-                <div className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-memphisTeal mb-1">
-                  15+
-                </div>
-                <div className="font-body font-bold text-xs sm:text-sm text-white/80">Study Groups & Proyek</div>
-              </div>
-              <div className="p-3">
-                <div className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-memphisSky mb-1">
-                  5+
-                </div>
-                <div className="font-body font-bold text-xs sm:text-sm text-white/80">Kampus Partner</div>
-              </div>
-            </div>
-          </div>
-
         </div>
       </section>
 
@@ -667,111 +466,51 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── TESTIMONI (ANIMATED HORIZONTAL CAROUSEL SLIDER - SCALABLE & ZERO HEIGHT BLOAT) ── */}
-      <section id="testimoni" className="py-16 sm:py-24 relative z-10 bg-white border-t-4 border-ink">
+      {/* ── TESTIMONI ── */}
+      <section id="testimoni" className="py-16 sm:py-20 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-          {/* Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+          <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
             <div className="inline-block bg-memphisTeal text-white text-xs font-bold uppercase tracking-wider px-4 py-1.5 rounded-full memphis-border memphis-shadow-sm mb-3">
-              💬 TESTIMONI MEMBER KOMUNITAS
+              TESTIMONI MEMBER
             </div>
             <h2 className="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-ink">
               Apa kata mereka setelah join Ruang Belajar?
             </h2>
-            <p className="font-body text-sm sm:text-base text-ink/70 mt-2">
-              Kisah nyata pengalaman belajar & berkembang bersama teman-teman komunitas.
-            </p>
           </div>
 
-          {/* Carousel Card Container */}
-          <div className="max-w-4xl mx-auto relative">
-
-            {/* Active Testimonial Card */}
-            <div
-              className="bg-cream rounded-3xl p-6 sm:p-10 memphis-border memphis-shadow-lg transition-all duration-500 relative overflow-hidden"
-              onMouseEnter={() => setIsAutoPlay(false)}
-              onMouseLeave={() => setIsAutoPlay(true)}
-            >
-              {/* Rating stars & Tag */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-1">
-                  {[...Array(TESTIMONIALS[currentTestiIndex].rating)].map((_, i) => (
-                    <span key={i} className="text-memphisMustard text-xl sm:text-2xl">★</span>
-                  ))}
-                </div>
-                <span className="bg-white text-ink font-display font-bold text-xs px-3 py-1 rounded-full memphis-border">
-                  {TESTIMONIALS[currentTestiIndex].tag}
-                </span>
-              </div>
-
-              {/* Quote text */}
-              <blockquote className="font-body text-ink text-base sm:text-xl md:text-2xl leading-relaxed italic mb-8 relative z-10">
-                "{TESTIMONIALS[currentTestiIndex].quote.replace(/^"|"$/g, '')}"
-              </blockquote>
-
-              {/* Member Profile Footer */}
-              <div className="flex items-center justify-between pt-6 border-t-2 border-ink/10 flex-wrap gap-4">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={TESTIMONIALS[currentTestiIndex].img}
-                    alt={TESTIMONIALS[currentTestiIndex].name}
-                    className="w-12 h-12 sm:w-14 sm:h-14 rounded-full object-cover memphis-border memphis-shadow-sm"
-                  />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {[
+              {
+                quote: '"Sebagai desainer grafis, awalnya saya nggak yakin bisa belajar coding. Tapi setelah gabung di Ruang Belajar, saya jadi ngerti banyak hal! Kursusnya jelas dan mudah dipahami. Sekarang saya bisa bikin website sederhana sendiri. Komunitasnya juga asyik banget buat nanya-nanya!"',
+                img: oparImg,
+                name: 'Opar Yusuf',
+                role: 'Graphic Designer',
+              },
+              {
+                quote: '"Awalnya aku bener-bener nggak ngerti apa-apa soal coding, tapi setelah ikut Ruang Belajar, semuanya jadi lebih jelas. Mulai dari HTML, CSS, sampai sekarang udah nyampe ke JavaScript! Materinya gampang dicerna, mentornya asik dan nggak pelit ilmu. Plus, ini gratis! Worth it buat yang pengen jadi web developer dari nol."',
+                img: adityaImg,
+                name: 'Aditya Beckham',
+                role: 'Web Developer Intern at Mahreen Indonesia',
+              },
+              {
+                quote: '"Ruang belajar ini seperti light mode di tengah kebingungan, tenang, fokus, dan nyaman untuk belajar IT."',
+                img: reishanImg,
+                name: 'Muhammad Reishan Asvialdy',
+                role: 'Mahasiswa Universitas Teknologi Bandung',
+              },
+            ].map((t) => (
+              <div key={t.name} className="bg-white rounded-3xl p-5 sm:p-6 memphis-border memphis-shadow-lg flex flex-col justify-between">
+                <p className="font-body text-ink text-sm sm:text-base mb-5 sm:mb-6 leading-relaxed italic">{t.quote}</p>
+                <div className="flex items-center gap-3 pt-4 border-t border-ink/10">
+                  <img src={t.img} alt={t.name} className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover memphis-border" />
                   <div>
-                    <div className="font-display font-extrabold text-ink text-base sm:text-lg">
-                      {TESTIMONIALS[currentTestiIndex].name}
-                    </div>
-                    <div className="text-xs sm:text-sm text-ink/75 font-medium">
-                      {TESTIMONIALS[currentTestiIndex].role}
-                    </div>
-                    <div className="text-[11px] sm:text-xs text-memphisViolet font-bold">
-                      🎓 {TESTIMONIALS[currentTestiIndex].campus}
-                    </div>
+                    <div className="font-display font-bold text-ink text-sm sm:text-base">{t.name}</div>
+                    <div className="text-xs text-ink/60">{t.role}</div>
                   </div>
                 </div>
-
-                {/* Slider Controls */}
-                <div className="flex items-center gap-3">
-                  <button
-                    onClick={prevTesti}
-                    aria-label="Previous Testimonial"
-                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-memphisMustard text-ink font-bold flex items-center justify-center memphis-border memphis-shadow-sm transition-transform active:scale-95"
-                  >
-                    ←
-                  </button>
-                  <button
-                    onClick={nextTesti}
-                    aria-label="Next Testimonial"
-                    className="w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white hover:bg-memphisMustard text-ink font-bold flex items-center justify-center memphis-border memphis-shadow-sm transition-transform active:scale-95"
-                  >
-                    →
-                  </button>
-                </div>
               </div>
-
-              {/* Decorative Accent */}
-              <div className="absolute -bottom-10 -right-10 w-36 h-36 rounded-full bg-memphisCoral/10 pointer-events-none" />
-            </div>
-
-            {/* Pagination Indicators / Dots */}
-            <div className="flex items-center justify-center gap-2 mt-6">
-              {TESTIMONIALS.map((t, idx) => (
-                <button
-                  key={t.id}
-                  onClick={() => {
-                    setIsAutoPlay(false);
-                    setCurrentTestiIndex(idx);
-                  }}
-                  className={`h-3 rounded-full transition-all duration-300 memphis-border ${idx === currentTestiIndex ? 'w-8 bg-memphisCoral' : 'w-3 bg-white hover:bg-memphisMustard'
-                    }`}
-                  aria-label={`Go to slide ${idx + 1}`}
-                />
-              ))}
-            </div>
-
+            ))}
           </div>
-
         </div>
       </section>
 
@@ -794,7 +533,6 @@ export default function LandingPage() {
             {/* Navigasi */}
             <div className="lg:col-span-3 space-y-2 text-sm">
               <div className="font-display font-bold text-memphisMustard uppercase tracking-wider mb-3">Navigasi</div>
-              <div><a href="#tentang" className="text-white/80 hover:text-memphisTeal transition-colors">Tentang Kami</a></div>
               <div><a href="#fitur" className="text-white/80 hover:text-memphisTeal transition-colors">Aktivitas</a></div>
               <div><a href="#study-groups" className="text-white/80 hover:text-memphisTeal transition-colors">Study Groups</a></div>
               <div><a href="#testimoni" className="text-white/80 hover:text-memphisTeal transition-colors">Testimoni</a></div>
