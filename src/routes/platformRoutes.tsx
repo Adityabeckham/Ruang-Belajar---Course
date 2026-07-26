@@ -6,6 +6,7 @@ import PlaceholderPage from '@/pages/PlaceholderPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
 import ProfilePage from '@/pages/profile/ProfilePage';
 import AdminUsersPage from '@/pages/admin/users/AdminUsersPage';
+import PlaygroundPage from '@/pages/playground/PlaygroundPage';
 
 /**
  * Route milik Dev C (Platform & Engagement): publik, dashboard, profil, admin user.
@@ -26,6 +27,15 @@ export const platformRoutes: RouteObject[] = [
     element: (
       <ProtectedRoute>
         <ProfilePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    // Free Code Playground — belajar bebas HTML/CSS/JS tanpa latihan formal.
+    path: 'playground',
+    element: (
+      <ProtectedRoute>
+        <PlaygroundPage />
       </ProtectedRoute>
     ),
   },
