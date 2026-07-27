@@ -237,25 +237,20 @@ export const getMyBadges = query({
 });
 
 // ── Leaderboard Top 10 Member (XP tertinggi) ─────────────────────────
+// Semua data yang dibutuhkan (displayName, avatarUrl, XP, level) sudah
+// ada di tabel `profiles` — tidak perlu join ke `users` untuk tampilan UI.
 export const getLeaderboard = query({
   args: {},
   handler: async (ctx) => {
     const profiles = await ctx.db.query("profiles").collect();
     profiles.sort((a, b) => b.totalXp - a.totalXp);
-    const top = profiles.slice(0, 10);
 
-    return await Promise.all(
-      top.map(async (p, i) => {
-        const user = await ctx.db.get(p.userId);
-        return {
-          rank: i + 1,
-          displayName: p.displayName,
-          avatarUrl: p.avatarUrl ?? null,
-          totalXp: p.totalXp,
-          level: p.level,
-          email: user?.email ?? null,
-        };
-      }),
-    );
+    return profiles.slice(0, 10).map((p, i) => ({
+      rank: i + 1,
+      displayName: p.displayName,
+      avatarUrl: p.avatarUrl ?? null,
+      totalXp: p.totalXp,
+      level: p.level,
+    }));
   },
 });
