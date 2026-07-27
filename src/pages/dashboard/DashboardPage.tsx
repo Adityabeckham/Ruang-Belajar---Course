@@ -5,6 +5,7 @@ import type { Id } from '../../../convex/_generated/dataModel';
 import { Progress, Loading, EmptyState } from '@/components/ui';
 import MyXPBar from '@/features/gamification/MyXPBar';
 import BadgeShelf from '@/features/gamification/BadgeShelf';
+import LeaderboardWidget from '@/features/gamification/LeaderboardWidget';
 
 type Course = {
   _id: string;
@@ -58,9 +59,10 @@ function EnrolledCourseCard({ course }: { course: Course }) {
   );
 }
 
-/** Dashboard siswa: lanjut belajar + XP/level + badge (Memphis styled). */
+/** Dashboard siswa: lanjut belajar + XP/level + badge + leaderboard (Memphis styled). */
 export default function DashboardPage() {
   const enrolled = useQuery(api.enrollments.listMine) as Course[] | undefined;
+  const profile = useQuery(api.profiles.getCurrentProfile);
 
   return (
     <div
@@ -180,6 +182,25 @@ export default function DashboardPage() {
               </div>
             </div>
             <BadgeShelf />
+          </section>
+
+          {/* Section 4: Leaderboard */}
+          <section className="bg-white rounded-3xl memphis-border memphis-shadow-lg p-5 sm:p-8">
+            <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-memphisCoral text-white flex items-center justify-center memphis-border font-bold text-lg">
+                  📊
+                </div>
+                <div>
+                  <h2 className="font-display font-bold text-xl sm:text-2xl text-ink">Papan Peringkat</h2>
+                  <p className="text-xs sm:text-sm text-ink/60">Top 10 member komunitas dengan XP tertinggi.</p>
+                </div>
+              </div>
+              <span className="text-xs font-bold bg-memphisCoral/10 text-memphisCoral border border-memphisCoral/30 px-3 py-1 rounded-full">
+                🏁 Real-time
+              </span>
+            </div>
+            <LeaderboardWidget currentUserName={profile?.displayName} />
           </section>
 
         </div>

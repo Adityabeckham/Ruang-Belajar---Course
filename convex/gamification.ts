@@ -169,11 +169,42 @@ export const getMyGamification = query({
     const { totalXp, level } = profile;
     const base = levelXp(level);
     const next = levelXp(level + 1);
+
+    // ── Daily Streak Calculation ─────────────────────────────────────
+    // Ambil semua lessonProgress → hitung hari berturut-turut hingga hari ini.
+    const progresses = await ctx.db
+      .query("lessonProgress")
+      .withIndex("by_user_lesson", (q) => q.eq("userId", user._id))
+      .collect();
+
+    // Normalisasi ke set tanggal unik "YYYY-MM-DD" (timezone UTC).
+    const daySet = new Set<string>();
+    for (const p of progresses) {
+      const d = new Date(p.completedAt);
+      daySet.add(`${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}`);
+    }
+
+    // Hitung streak mundur dari hari ini.
+    let streak = 0;
+    const todayUTC = new Date();
+    for (let i = 0; i <= 365; i++) {
+      const d = new Date(todayUTC);
+      d.setUTCDate(d.getUTCDate() - i);
+      const key = `${d.getUTCFullYear()}-${d.getUTCMonth()}-${d.getUTCDate()}`;
+      if (daySet.has(key)) {
+        streak++;
+      } else if (i > 0) {
+        // Gap hari tanpa belajar → streak berhenti (kecuali hari ini belum ada lesson)
+        break;
+      }
+    }
+
     return {
       totalXp,
       level,
-      xpIntoLevel: totalXp - base, // value untuk XPBar
-      xpForNextLevel: next - base, // max untuk XPBar
+      xpIntoLevel: totalXp - base,   // value untuk XPBar
+      xpForNextLevel: next - base,    // max untuk XPBar
+      dailyStreak: streak,            // hari berturut-turut belajar
     };
   },
 });
@@ -202,5 +233,29 @@ export const getMyBadges = query({
       earned: earned.has(b._id),
       awardedAt: earned.get(b._id) ?? null,
     }));
+  },
+});
+
+// ── Leaderboard Top 10 Member (XP tertinggi) ─────────────────────────
+export const getLeaderboard = query({
+  args: {},
+  handler: async (ctx) => {
+    const profiles = await ctx.db.query("profiles").collect();
+    profiles.sort((a, b) => b.totalXp - a.totalXp);
+    const top = profiles.slice(0, 10);
+
+    return await Promise.all(
+      top.map(async (p, i) => {
+        const user = await ctx.db.get(p.userId);
+        return {
+          rank: i + 1,
+          displayName: p.displayName,
+          avatarUrl: p.avatarUrl ?? null,
+          totalXp: p.totalXp,
+          level: p.level,
+          email: user?.email ?? null,
+        };
+      }),
+    );
   },
 });
