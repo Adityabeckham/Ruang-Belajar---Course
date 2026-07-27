@@ -11,7 +11,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "npm run build && wrangler dev",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler deploy",
+    "deploy:backend": "convex deploy --yes",
+    "deploy:frontend": "npm run build && wrangler deploy",
+    "deploy:all": "npm run deploy:backend && npm run deploy:frontend"
   },
   "dependencies": {
     "@codemirror/lang-css": "^6.3.1",
