@@ -1,6 +1,6 @@
 # Ruang Belajar LMS
 
-> Platform pembelajaran online gratis untuk komunitas developer Indonesia. 🇮🇩
+> Platform pembelajaran online gratis untuk semua kalangan di indonesia. 🇮🇩
 
 LMS untuk komunitas belajar programming. Stack: **React 19 + Vite + Tailwind 4 + Ant Design + Convex + Firebase Auth + Cloudflare Workers**.
 
